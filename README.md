@@ -1,2 +1,2 @@
-# interfaces
+# Interfaces
 Sample platform sample
