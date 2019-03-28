@@ -1,0 +1,20 @@
+language: node_js
+env:
+  global:
+    secure: ld9I0IjhaUr5/cWVughYmkvc7BW9LfLi9SkIvKXT+PhFLi/heDtqnvrxSKbTfx8pyaaDzQjO0f3zPGMIj59MEtICHsYygGFZ95M9CG+xIsmYofjVBjy+egKIvnyBl4PPYw5nqiviboba33T/FToIEpgwMGAi1d42dX9ZodVtTonkOkQFvNfJeZMxllf2S1HuPApcdSvIsYk2PBWVcS4LzHTJdPbNowpx9a90dXhxP6ZiOIJD1AkCzM7r/ZBo93L/j349Z/a2f+O5IHlHH8DI0pa1jNfwBDX5pYqoius621UYkMLPsAf4C7oR+pVxt8eMiTACfMxJhfyHaY/nDagJCOceUkPcYi8PodRet9FDkt3JoYDNIQyTUbaaSt7jDRr3uIZ9JtriJmC+ahdq8kH/BR/iu+mT84A8H9kVIAk0qYy9XjLyjSmCRwYanTji6EhzKj+Zgz4J3FD7Ze2qTymV8obNmEBggchX+ElYTUBI5IPoAtW2Y85BKqDjQbdPzSH4A6XdRQzcrSZ0RtFzAEr7YS+EPYxBNd/hIpkoEBwT0hOVHNdzbMjtOxEuK2TBn+LsP9lY+QgRDOZ+2h+ImT/jw4xLwhhvwgXkv5uitwb74TMk0WaF9G0mZ5fnw/CynoXGpByFxjZ/agLhkINmkSxbn/arSs/n4QbCn0nKe5Zq74Q=
+  matrix:
+  - NODE_ENV: development
+  - NODE_ENV: production
+node_js:
+- 11
+- 10
+- 8
+cache: npm
+install:
+- npm install
+- npm install --only=dev
+- npm install coveralls codecov
+script:
+- npm run cov-test
+- "./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov && codecov"
+- ./node_modules/.bin/nyc report --reporter=text-lcov | coveralls

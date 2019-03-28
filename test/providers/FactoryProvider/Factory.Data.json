@@ -1,0 +1,66 @@
+{
+    "Factories" : [
+        {
+            "Name": "Plant1",
+            "Code": "Plant_001",
+            "WorkStations" : [
+                {
+                    "Code" : "WS001",
+                    "Running" : 1,
+                    "CapacityHH" : 5
+                },
+                {
+                    "Code" : "WS002",
+                    "Running" : 1,
+                    "CapacityHH" : 10
+                },
+                {
+                    "Code" : "WS011",
+                    "Running" : 1,
+                    "CapacityHH" : 1
+                },
+                {
+                    "Code" : "WS012",
+                    "Running" : 1,
+                    "CapacityHH" : 2
+                },
+                {
+                    "Code" : "WS030",
+                    "Running" : 1,
+                    "CapacityHH" : 1
+                }
+            ]
+        },
+        {
+            "Name": "Plant2",
+            "Code": "Plant_002",
+            "WorkStations" : [
+                {
+                    "Code" : "WS001",
+                    "Running" : 1,
+                    "CapacityHH" : 5
+                },
+                {
+                    "Code" : "WS002",
+                    "Running" : 1,
+                    "CapacityHH" : 10
+                },
+                {
+                    "Code" : "WS011",
+                    "Running" : 1,
+                    "CapacityHH" : 1
+                },
+                {
+                    "Code" : "WS012",
+                    "Running" : 1,
+                    "CapacityHH" : 2
+                },
+                {
+                    "Code" : "WS030",
+                    "Running" : 1,
+                    "CapacityHH" : 1
+                }
+            ]
+        }
+    ]
+}

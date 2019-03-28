@@ -1,0 +1,55 @@
+{
+    "BOM":[
+        {
+            "Code" : "BOM_1",
+            "Parts" : [ 
+                {
+                    "Code" : "Part1",
+                    "Qta" : 3
+                },
+                {
+                    "Code" : "Part2",
+                    "Qta" : 1
+                },
+                {
+                    "Code" : "Part3",
+                    "Qta" : 1
+                }
+            ]
+        },
+        {
+            "Code" : "BOM_2",
+            "Parts" : [ 
+                {
+                    "Code" : "Part1",
+                    "Qta" : 1
+                },
+                {
+                    "Code" : "Part2",
+                    "Qta" : 1
+                },
+                {
+                    "Code" : "Part3",
+                    "Qta" : 1
+                }
+            ]
+        },
+        {
+            "Code" : "BOM_3",
+            "Parts" : [ 
+                {
+                    "Code" : "Part1",
+                    "Qta" : 1
+                },
+                {
+                    "Code" : "Part2",
+                    "Qta" : 1
+                },
+                {
+                    "Code" : "Part3",
+                    "Qta" : 1
+                }
+            ]
+        }
+    ]
+}

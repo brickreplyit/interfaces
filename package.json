@@ -1,0 +1,29 @@
+{
+  "name": "platform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./test//**/*.Tests.js ./test//**/*.spec.js",
+    "cov-test": "nyc --exclude 'dist/**' --exclude 'spec/**' --reporter text npm test",
+    "cov-html": "nyc report --reporter html",
+    "eslint": "eslint ./*//*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piexmuss/platform.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/piexmuss/platform/issues"
+  },
+  "homepage": "https://github.com/piexmuss/platform#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "debug": "^4.1.1",
+    "eslint": "^5.12.1",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0"
+  }
+}
