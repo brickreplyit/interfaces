@@ -9,7 +9,6 @@ const IBom = require('../../lib/abstraction/base/IBom');
 const IOperation = require('../../lib/abstraction/base/IOperation');
 const ICompletion = require('../../lib/abstraction/base/ICompletion');
 const IExecutionWork = require('../../lib/abstraction/IExecutionWork');
-const ITime = require('../../lib/abstraction/base/ITime');
 
 const ExecutionWork = require('../unit/Core/ExecutionWork');
 const Operation = require('../unit/Core/Operation');
@@ -17,6 +16,7 @@ const Pieces = require('../../lib/entity/Pieces');
 const Completion = require('../unit/Core/Completion');
 const Time = require('../unit/Core/Time');
 const BOM = require('../unit/Core/Bom');
+const StockManager = require('../unit/Core/StockManager');
 
 async function test_throw(func)
 {
@@ -237,11 +237,17 @@ describe('Plant', () => {
 
         const operation = new Operation(); 
 
+        const bom = new BOM();
+
+        const stock = new StockManager();
+
         const final = {};
+
+        const stock_final = {};
 
         for(var production_day = 0; production_day < 5; production_day++)
         {
-            
+             
             const time = new Time(t = t + time_unit);
 
             const child_operations = {};
@@ -253,38 +259,39 @@ describe('Plant', () => {
                     const name = operation_factory[elem].name;
                     const child_op = operation_factory[elem].operations;
                     
-                    child_operations[name] = new ExecutionWork(name, operation, child_op, time);
+                    child_operations[name] = new ExecutionWork(name, operation, child_op, time, bom, stock);
                     
                 }
             }
 
-            const bom = new BOM();
-
-            const ew = new ExecutionWork('plant', new Operation(), child_operations, time, bom);
+            const ew = new ExecutionWork('plant', new Operation(), child_operations, time, bom, stock);
             
             const result = new Completion(time);
 
             await ew.Work(new Pieces(200, 'ProductionOrder'), result, 'plant');
 
             final[t] = result.result;
-          
+
+            stock_final[t] = result.result; 
+            
         }
         
-        dbg('end date', new Date(t));
-        dbg('result', JSON.stringify(final, null, 4));
+        //dbg('end date', new Date(t));
+        //dbg('result', JSON.stringify(final, null, 4));
 
         const start_times = Object.keys(final);
 
         const station_table = {};
         const stock_table = {};
+        const warehouse_table = {};
 
-        dbg('time key',  start_times);
+        //dbg('time key',  start_times);
 
         //loop day
         for(let j = 0; j < start_times.length; j++)
         {
             const day =  final[start_times[j]];
-            dbg('work', j,);
+            //dbg('work', j,);
             //loop station
             const workUnits = Object.keys(day);
 
@@ -325,18 +332,46 @@ describe('Plant', () => {
             }
         }
 
-        dbg('station table', station_table);
-        dbg('stock table', stock_table);
+        for(let j = 0; j < start_times.length; j++)
+        {
+            const day =  final[start_times[j]];
+            //dbg('work', j,);
+            //loop station
+            const workUnits = Object.keys(day);
+
+            for(let k= 0; k < workUnits.length; k++)
+            {
+                const station = day[workUnits[k]];
+
+                const station_time = station.time;
+
+                const pieces_type = station.production.pieces.type;
+
+                if(undefined === warehouse_table[station_time])
+                    warehouse_table[station_time] = {};
+                else
+                if(undefined === warehouse_table[station_time][pieces_type])
+                    warehouse_table[station_time][pieces_type] = 0;
+
+                warehouse_table[station_time][pieces_type] = station.production.consumptionItems;
+
+            }
+        }
+
+        // dbg('station table', station_table);
+        // dbg('stock table', stock_table);
+        dbg('daily consumption table table', JSON.stringify(warehouse_table, null, 4));
 
         const start_unit = 1;
 
-        dbg('time 2', start + ((2 + start_unit) * time_unit));
+        //dbg('time 2', start + ((2 + start_unit) * time_unit));
 
         expect(stock_table[start + ((2 + start_unit) * time_unit)].outAvv).to.be.eq(200);
         expect(station_table[start + ((2 + start_unit) * time_unit)].AVV).to.be.eq(200);
 
-        //expect(stock_table[start + ((4 + start_unit) * time_unit)].outAvv).to.be.eq(200);
         expect(station_table[start + ((4 + start_unit) * time_unit)].AVV).to.be.eq(200);
+
+        //dbg('stock_final', JSON.stringify(stock_final, null, 4));
     });
 
 });

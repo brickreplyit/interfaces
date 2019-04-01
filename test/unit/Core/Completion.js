@@ -1,4 +1,5 @@
 const ICompletion = require('../../../lib/abstraction/base/ICompletion');
+const Pieces = require('../../../lib/entity/Pieces');
 
 class Completion extends ICompletion{
 
@@ -10,7 +11,7 @@ class Completion extends ICompletion{
         this.result = {};
     }
 
-    async SetComplete(pieces, workId, operationTrack, consumptionItems)
+    async SetComplete(IStockManager, pieces, workId, operationTrack, consumptionItems)
     {
         //pieces.type = workId;
 
@@ -19,15 +20,25 @@ class Completion extends ICompletion{
             , production :{
                 pieces : JSON.parse(JSON.stringify(pieces))
                 , operationTrack
-                , consumptionItems
+                , consumptionItems : await this.ConsumeItems(IStockManager, consumptionItems)
             }
            
             
         };
 
-       
+    }
 
+    async ConsumeItems(IStockManager, consumptionItems)
+    {
+        const res = [];
 
+        for(const consumptionItem of consumptionItems){
+            await IStockManager.Consume(consumptionItem.type, consumptionItem.RemainingQuantity);
+            res.push(new Pieces(consumptionItem.ConsumedQuantity, consumptionItem.type));
+        }
+
+        return res;
+        
     }
 
     async GetPieces(workId){

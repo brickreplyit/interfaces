@@ -3,7 +3,16 @@ const Pieces = require('../../../lib/entity/Pieces');
 
 class ExecutionWork extends IExecutionWork{
 
-    constructor(whoIam, IOperations, child_operations, ITime, IBom){
+    /**
+     * 
+     * @param {*} whoIam 
+     * @param {*} IOperations 
+     * @param {*} child_operations 
+     * @param {*} ITime 
+     * @param {*} IBom 
+     * @param {*} IStockManager 
+     */
+    constructor(whoIam, IOperations, child_operations, ITime, IBom, IStockManager){
         super();
 
         this.whoIam = whoIam;
@@ -15,8 +24,16 @@ class ExecutionWork extends IExecutionWork{
         this.time = ITime;
 
         this.Bom = IBom;
+
+        this.StockManager = IStockManager;
     }
 
+    /**
+     * 
+     * @param {*} pieces 
+     * @param {*} ICompletion 
+     * @param {*} workID 
+     */
     async Work(pieces, ICompletion, workID)
     {
         const operations = await this.operations.GetOperation(pieces, workID);
@@ -37,7 +54,7 @@ class ExecutionWork extends IExecutionWork{
                 work_pieces = worked.production.pieces;
             }
 
-            await ICompletion.SetComplete(pieces, workID, {}, {});
+            await ICompletion.SetComplete(this.StockManager, pieces, workID, {}, []);
 
         }else
         {
@@ -68,15 +85,34 @@ class ExecutionWork extends IExecutionWork{
                 break;
             }
 
-            const bom = await this.Bom.getBom(piece_type, workID);
+            const bom = await this.Bom.GetBom(piece_type, workID);
 
-            // for(let inp = 0; inp < bom.inputs.length; inp++)
-            // {
-                
-            // }
+            const consumed_items = [];
+
+            if(undefined !== bom.inputs)
+            {
+                for(let inp = 0; inp < bom.inputs.length; inp++)
+                {
+                    var pieceToConsume = bom.inputs[inp];
+
+                    const stock_quantity = (await this.StockManager.GetStockByPieceType(pieceToConsume.type)).quantity;
+
+                    const consumed = (pieceToConsume.quantity) * real_production_capacity;
+
+                    consumed_items.push({
+                        type : pieceToConsume.type
+                        , ConsumedQuantity : consumed
+                        , RemainingQuantity : stock_quantity - consumed
+                    });
+                }
+            }
+
+            const produced_quantity = (await this.StockManager.GetStockByPieceType(piece_type)).quantity;
+            
+            await this.StockManager.Push(piece_type, produced_quantity + real_production_capacity);
 
             //this is a child
-            await ICompletion.SetComplete(new Pieces(real_production_capacity, piece_type), workID, {}, {});
+            await ICompletion.SetComplete(this.StockManager, new Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
         }
 
 

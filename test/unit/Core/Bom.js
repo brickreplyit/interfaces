@@ -27,28 +27,28 @@ class Bom extends IBom{
             name : 'Finished'
             , boms : [
                 { name : 'outArr', inputs : [ 
-                    {type : 'Plast A', length : 1}
-                    ,{type : 'Faston', length : 2}
+                    {type : 'Plast A', quantity : 1}
+                    ,{type : 'Faston', quantity : 2}
                 ]
                 }
                 , { name : 'outAvv', inputs : [ 
-                    {type : 'outArr', length : 1}
-                    ,{type : 'Rame', length : 1}
+                    {type : 'outArr', quantity : 1}
+                    ,{type : 'Rame', quantity : 1}
                 ]
                 }
                 , { name : 'outPrs', inputs : [ 
-                    {type : 'Plast B', length : 1}
-                    ,{type : 'outAvv', length : 1}
+                    {type : 'Plast B', quantity : 1}
+                    ,{type : 'outAvv', quantity : 1}
                 ]
                 }
                 , { name : 'outTrm', inputs : [ 
-                    {type : 'Plast C', length : 1}
+                    {type : 'Plast C', quantity : 1}
                 ]
                 }
                 , { name : 'Finished', inputs : [ 
-                    {type : 'outPrs', length : 1}
-                    ,{type : 'outTrm', length : 1}
-                    ,{type : 'min', length : 5}
+                    {type : 'outPrs', quantity : 1}
+                    ,{type : 'outTrm', quantity : 1}
+                    ,{type : 'min', quantity : 5}
                 ]
                 }
             ]
