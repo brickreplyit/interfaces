@@ -13,8 +13,6 @@ class Completion extends ICompletion{
 
     async SetComplete(IStockManager, pieces, workId, operationTrack, consumptionItems)
     {
-        //pieces.type = workId;
-
         this.result[workId] =  { 
             time : this.time.getTime()
             , production :{
@@ -22,10 +20,7 @@ class Completion extends ICompletion{
                 , operationTrack
                 , consumptionItems : await this.ConsumeItems(IStockManager, consumptionItems)
             }
-           
-            
         };
-
     }
 
     async ConsumeItems(IStockManager, consumptionItems)
@@ -37,8 +32,7 @@ class Completion extends ICompletion{
             res.push(new Pieces(consumptionItem.ConsumedQuantity, consumptionItem.type));
         }
 
-        return res;
-        
+        return res;       
     }
 
     async GetPieces(workId){

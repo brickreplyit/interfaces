@@ -2,8 +2,6 @@ const expect = require('chai').expect;
 const util   = require('./utility');
 const dbg = require('debug')('platform:abstraction:test');
 
-
-
 const IProductionPreview = require('../../lib/abstraction/IProductionPreview');
 const IBom = require('../../lib/abstraction/base/IBom');
 const IOperation = require('../../lib/abstraction/base/IOperation');
@@ -49,8 +47,6 @@ describe('all abstraction should throw', () => {
 
         const target = production_preview; 
 
-        //test_abstraction(target);
-
         const func = util.get_all_functions(target);
 
         func.forEach((f) => {
@@ -74,8 +70,6 @@ describe('all abstraction should throw', () => {
         const BOM = new IBom();
 
         const target = BOM; 
-
-        //test_abstraction(target);
 
         const func = util.get_all_functions(target);
 
@@ -101,8 +95,6 @@ describe('all abstraction should throw', () => {
 
         const target = operation; 
 
-        //test_abstraction(target);
-
         const func = util.get_all_functions(target);
 
         func.forEach((f) => {
@@ -127,8 +119,6 @@ describe('all abstraction should throw', () => {
 
         const target = completion; 
 
-        //test_abstraction(target);
-
         const func = util.get_all_functions(target);
 
         func.forEach((f) => {
@@ -152,8 +142,6 @@ describe('all abstraction should throw', () => {
         const execution_work = new IExecutionWork();
 
         const target = execution_work; 
-
-        //test_abstraction(target);
 
         const func = util.get_all_functions(target);
 
