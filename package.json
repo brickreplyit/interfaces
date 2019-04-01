@@ -21,6 +21,8 @@
   "homepage": "https://github.com/piexmuss/platform#readme",
   "dependencies": {
     "chai": "^4.2.0",
+    "codecov": "^3.2.0",
+    "coveralls": "^3.0.3",
     "debug": "^4.1.1",
     "eslint": "^5.12.1",
     "mocha": "^5.2.0",
