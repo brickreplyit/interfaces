@@ -263,6 +263,15 @@ describe('Plant', () => {
 
     });
 
+    it('Should return Time', async () => {
+        const time = new Time();
+
+        const result = await time.getTime();
+
+        expect(result).to.be.not.null;
+
+    });
+
     it('IWork should work', async () => {
         
         let t = 946681200000;
