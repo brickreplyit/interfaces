@@ -8,6 +8,7 @@ const IOperation = require('../../lib/abstraction/base/IOperation');
 const ICompletion = require('../../lib/abstraction/base/ICompletion');
 const IExecutionWork = require('../../lib/abstraction/IExecutionWork');
 const IStockManager= require('../../lib/abstraction/base/IStockManager');
+const ITime= require('../../lib/abstraction/base/ITime');
 
 const ExecutionWork = require('../unit/Core/ExecutionWork');
 const Operation = require('../unit/Core/Operation');
@@ -71,6 +72,30 @@ describe('all abstraction should throw', () => {
         const production_preview = new IStockManager();
 
         const target = production_preview; 
+
+        const func = util.get_all_functions(target);
+
+        func.forEach((f) => {
+                
+            it('interface method ' + f + ' should throw', async () => {
+                
+                const func = target[f];
+
+                const thrown = await test_throw(func);
+
+                expect(thrown).to.be.true;
+                
+            });
+
+        });
+             
+    });
+
+    describe('ITime',  () =>{
+        
+        const time = new ITime();
+
+        const target = time; 
 
         const func = util.get_all_functions(target);
 

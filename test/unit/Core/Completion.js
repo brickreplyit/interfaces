@@ -1,3 +1,5 @@
+const dbg = require('debug')('platform:abstraction:test');
+
 const ICompletion = require('../../../lib/abstraction/base/ICompletion');
 const Pieces = require('../../../lib/entity/Pieces');
 
@@ -22,7 +24,7 @@ class Completion extends ICompletion{
 
         for(let item = 0; item < consumptionItems.length; item++){
             if(undefined !== item && null !== item)
-                await this.StockManager.Consume(consumptionItems[item].type, consumptionItems[item].quantity);
+                await this.StockManager.Consume(consumptionItems[item].type, (consumptionItems[item]).length);
         }
 
         this.result[workId] =  { 
@@ -33,18 +35,6 @@ class Completion extends ICompletion{
                 , consumptionItems : consumptionItems
             }
         };
-    }
-
-    async ConsumeItems(IStockManager, consumptionItems)
-    {
-        const res = [];
-
-        for(const consumptionItem of consumptionItems){
-            await IStockManager.Consume(consumptionItem.type, consumptionItem.RemainingQuantity);
-            res.push(new Pieces(consumptionItem.ConsumedQuantity, consumptionItem.type));
-        }
-
-        return res;       
     }
 
     async GetPieces(workId){

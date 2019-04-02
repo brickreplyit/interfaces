@@ -99,7 +99,7 @@ class ExecutionWork extends IExecutionWork{
 
                     await this.StockManager.Reserve(pieceToConsume.type, consumed);
 
-                    consumed_items.push(pieceToConsume);
+                    consumed_items.push(new Pieces(consumed, pieceToConsume.type));
                 }
             }
             //this is a child

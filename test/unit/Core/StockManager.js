@@ -43,20 +43,6 @@ class StockManager extends IStockManager{
         };
     }
 
-    async GetStock()
-    {
-        return this.Warehouse.stocks;
-    }
-
-    /**
-     * 
-     * @param {*} piece_type 
-     */
-    async GetStockByPieceType(piece_type)
-    {
-        return findPieceByType(this.Warehouse.stocks, 'piece', piece_type);
-    }
-
     /**
      * 
      * @param {*} piece_type 
@@ -97,16 +83,17 @@ class StockManager extends IStockManager{
 
         if(undefined !== piece && null !== piece){
             if(piece.quantity > quantity){
-                await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved + (piece.quantity - quantity));
+                await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved + quantity);
+                return updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', (piece.quantity - quantity));
             }
             else {
                 await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved + piece.quantity);
+                return updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', 0);
             }
         }
 
-        return updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', (piece.quantity - quantity));
+       
     }
-    
 }
 
 
