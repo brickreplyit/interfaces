@@ -1,19 +1,19 @@
 const IStockManager = require('../../../lib/abstraction/base/IStockManager');
 
-function updateObjectByKey(array, key, value, fieldToUpdate, newValue){
-    for (var i = 0; i < array.length; i++) {
-        if (array[i][key] === value) {
-            array[i][fieldToUpdate] = newValue;
+function updateStockQuantityByType(stock, JSON_Key, piece_type, JSON_Key_To_Update, new_quantity){
+    for (var i = 0; i < stock.length; i++) {
+        if (stock[i][JSON_Key] === piece_type) {
+            stock[i][JSON_Key_To_Update] = new_quantity;
             return true;
         }
     }
     return false;
 }
 
-function findObjectByKey(array, key, value) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i][key] === value) {
-            return array[i];
+function findPieceByType(stock, JSON_Key, piece_type) {
+    for (var i = 0; i < stock.length; i++) {
+        if (stock[i][JSON_Key] === piece_type) {
+            return stock[i];
         }
     }
     return null;
@@ -27,18 +27,18 @@ class StockManager extends IStockManager{
         this.Warehouse = {
             name : 'plant_warehouse'
             , stocks : [
-                { piece: 'Plast A', quantity : 5000 }
-                , { piece: 'Plast B', quantity :  5000 }
-                , { piece: 'Rame', quantity :  5000 }
-                , { piece: 'Faston', quantity :  5000 }
-                , { piece: 'Plast C', quantity :  5000 }
-                , { piece: 'Color', quantity :  5000 }
-                , { piece: 'Min', quantity :  5000 }
-                , { piece: 'outArr', quantity : 0 }
-                , { piece: 'outAvv', quantity : 0 }
-                , { piece: 'outPrs', quantity : 0 }
-                , { piece: 'outTrm', quantity : 0 }
-                , { piece: 'Finished', quantity : 0 }
+                { piece: 'Plast A', quantity : 5000, reserved : 0 }
+                , { piece: 'Plast B', quantity :  5000, reserved : 0  }
+                , { piece: 'Rame', quantity :  5000, reserved : 0  }
+                , { piece: 'Faston', quantity :  5000, reserved : 0  }
+                , { piece: 'Plast C', quantity :  5000, reserved : 0  }
+                , { piece: 'Color', quantity :  5000, reserved : 0  }
+                , { piece: 'Min', quantity :  5000, reserved : 0  }
+                , { piece: 'outArr', quantity : 0, reserved : 0  }
+                , { piece: 'outAvv', quantity : 0, reserved : 0  }
+                , { piece: 'outPrs', quantity : 0, reserved : 0  }
+                , { piece: 'outTrm', quantity : 0, reserved : 0  }
+                , { piece: 'Finished', quantity : 0, reserved : 0  }
             ]
         };
     }
@@ -54,7 +54,7 @@ class StockManager extends IStockManager{
      */
     async GetStockByPieceType(piece_type)
     {
-        return findObjectByKey(this.Warehouse.stocks, 'piece', piece_type);
+        return findPieceByType(this.Warehouse.stocks, 'piece', piece_type);
     }
 
     /**
@@ -64,7 +64,11 @@ class StockManager extends IStockManager{
      */
     async Consume(piece_type, quantity)
     {
-        return updateObjectByKey(this.Warehouse.stocks, 'piece', piece_type, 'quantity', quantity);
+        const piece = await findPieceByType(this.Warehouse.stocks, 'piece', piece_type);
+
+        if(undefined !== piece && null !== piece){
+            await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved - quantity);
+        }
     }
 
     /**
@@ -72,10 +76,37 @@ class StockManager extends IStockManager{
      * @param {*} piece_type 
      * @param {*} quantity 
      */
-    async Push(piece_type, quantity)
+    async Produce(piece_type, quantity)
     {
-        return updateObjectByKey(this.Warehouse.stocks, 'piece', piece_type, 'quantity', quantity);
+        const piece = await findPieceByType(this.Warehouse.stocks, 'piece', piece_type);
+
+        if(undefined !== piece && null !== piece){
+            return updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', piece.quantity + quantity);
+        }
+        
     }
+
+    /**
+     * 
+     * @param {*} piece_type 
+     * @param {*} quantity 
+     */
+    async Reserve(piece_type, quantity)
+    {
+        const piece = await findPieceByType(this.Warehouse.stocks, 'piece', piece_type);
+
+        if(undefined !== piece && null !== piece){
+            if(piece.quantity > quantity){
+                await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved + (piece.quantity - quantity));
+            }
+            else {
+                await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved + piece.quantity);
+            }
+        }
+
+        return updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', (piece.quantity - quantity));
+    }
+    
 }
 
 

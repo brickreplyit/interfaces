@@ -7,6 +7,7 @@ const IBom = require('../../lib/abstraction/base/IBom');
 const IOperation = require('../../lib/abstraction/base/IOperation');
 const ICompletion = require('../../lib/abstraction/base/ICompletion');
 const IExecutionWork = require('../../lib/abstraction/IExecutionWork');
+const IStockManager= require('../../lib/abstraction/base/IStockManager');
 
 const ExecutionWork = require('../unit/Core/ExecutionWork');
 const Operation = require('../unit/Core/Operation');
@@ -44,6 +45,30 @@ describe('all abstraction should throw', () => {
     describe('IProductionPreview',  () =>{
         
         const production_preview = new IProductionPreview();
+
+        const target = production_preview; 
+
+        const func = util.get_all_functions(target);
+
+        func.forEach((f) => {
+                
+            it('interface method ' + f + ' should throw', async () => {
+                
+                const func = target[f];
+
+                const thrown = await test_throw(func);
+
+                expect(thrown).to.be.true;
+                
+            });
+
+        });
+             
+    });
+
+    describe('IStockManager',  () =>{
+        
+        const production_preview = new IStockManager();
 
         const target = production_preview; 
 
@@ -254,7 +279,7 @@ describe('Plant', () => {
 
             const ew = new ExecutionWork('plant', new Operation(), child_operations, time, bom, stock);
             
-            const result = new Completion(time);
+            const result = new Completion(time, stock);
 
             await ew.Work(new Pieces(200, 'ProductionOrder'), result, 'plant');
 
@@ -320,31 +345,31 @@ describe('Plant', () => {
             }
         }
 
-        for(let j = 0; j < start_times.length; j++)
-        {
-            const day =  final[start_times[j]];
-            //dbg('work', j,);
-            //loop station
-            const workUnits = Object.keys(day);
+        // for(let j = 0; j < start_times.length; j++)
+        // {
+        //     const day =  final[start_times[j]];
+        //     //dbg('work', j,);
+        //     //loop station
+        //     const workUnits = Object.keys(day);
 
-            for(let k= 0; k < workUnits.length; k++)
-            {
-                const station = day[workUnits[k]];
+        //     for(let k= 0; k < workUnits.length; k++)
+        //     {
+        //         const station = day[workUnits[k]];
 
-                const station_time = station.time;
+        //         const station_time = station.time;
 
-                const pieces_type = station.production.pieces.type;
+        //         const pieces_type = station.production.pieces.type;
 
-                if(undefined === warehouse_table[station_time])
-                    warehouse_table[station_time] = {};
-                else
-                if(undefined === warehouse_table[station_time][pieces_type])
-                    warehouse_table[station_time][pieces_type] = 0;
+        //         if(undefined === warehouse_table[station_time])
+        //             warehouse_table[station_time] = {};
+        //         else
+        //         if(undefined === warehouse_table[station_time][pieces_type])
+        //             warehouse_table[station_time][pieces_type] = 0;
 
-                warehouse_table[station_time][pieces_type] = station.production.consumptionItems;
+        //         warehouse_table[station_time][pieces_type] = station.production.consumptionItems;
 
-            }
-        }
+        //     }
+        //}
 
         // dbg('station table', station_table);
         // dbg('stock table', stock_table);

@@ -54,7 +54,7 @@ class ExecutionWork extends IExecutionWork{
                 work_pieces = worked.production.pieces;
             }
 
-            await ICompletion.SetComplete(this.StockManager, pieces, workID, {}, []);
+            await ICompletion.SetComplete(pieces, workID, {}, []);
 
         }else
         {
@@ -95,24 +95,15 @@ class ExecutionWork extends IExecutionWork{
                 {
                     var pieceToConsume = bom.inputs[inp];
 
-                    const stock_quantity = (await this.StockManager.GetStockByPieceType(pieceToConsume.type)).quantity;
-
                     const consumed = (pieceToConsume.quantity) * real_production_capacity;
 
-                    consumed_items.push({
-                        type : pieceToConsume.type
-                        , ConsumedQuantity : consumed
-                        , RemainingQuantity : stock_quantity - consumed
-                    });
+                    await this.StockManager.Reserve(pieceToConsume.type, consumed);
+
+                    consumed_items.push(pieceToConsume);
                 }
             }
-
-            const produced_quantity = (await this.StockManager.GetStockByPieceType(piece_type)).quantity;
-            
-            await this.StockManager.Push(piece_type, produced_quantity + real_production_capacity);
-
             //this is a child
-            await ICompletion.SetComplete(this.StockManager, new Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
+            await ICompletion.SetComplete(new Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
         }
 
 
