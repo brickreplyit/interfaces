@@ -2,14 +2,13 @@ const expect = require('chai').expect;
 const util   = require('./utility');
 const dbg = require('debug')('platform:abstraction:test');
 
-
-
 const IProductionPreview = require('../../lib/abstraction/IProductionPreview');
 const IBom = require('../../lib/abstraction/base/IBom');
 const IOperation = require('../../lib/abstraction/base/IOperation');
 const ICompletion = require('../../lib/abstraction/base/ICompletion');
 const IExecutionWork = require('../../lib/abstraction/IExecutionWork');
-const ITime = require('../../lib/abstraction/base/ITime');
+const IStockManager= require('../../lib/abstraction/base/IStockManager');
+const ITime= require('../../lib/abstraction/base/ITime');
 
 const ExecutionWork = require('../unit/Core/ExecutionWork');
 const Operation = require('../unit/Core/Operation');
@@ -17,6 +16,7 @@ const Pieces = require('../../lib/entity/Pieces');
 const Completion = require('../unit/Core/Completion');
 const Time = require('../unit/Core/Time');
 const BOM = require('../unit/Core/Bom');
+const StockManager = require('../unit/Core/StockManager');
 
 async function test_throw(func)
 {
@@ -49,7 +49,53 @@ describe('all abstraction should throw', () => {
 
         const target = production_preview; 
 
-        //test_abstraction(target);
+        const func = util.get_all_functions(target);
+
+        func.forEach((f) => {
+                
+            it('interface method ' + f + ' should throw', async () => {
+                
+                const func = target[f];
+
+                const thrown = await test_throw(func);
+
+                expect(thrown).to.be.true;
+                
+            });
+
+        });
+             
+    });
+
+    describe('IStockManager',  () =>{
+        
+        const production_preview = new IStockManager();
+
+        const target = production_preview; 
+
+        const func = util.get_all_functions(target);
+
+        func.forEach((f) => {
+                
+            it('interface method ' + f + ' should throw', async () => {
+                
+                const func = target[f];
+
+                const thrown = await test_throw(func);
+
+                expect(thrown).to.be.true;
+                
+            });
+
+        });
+             
+    });
+
+    describe('ITime',  () =>{
+        
+        const time = new ITime();
+
+        const target = time; 
 
         const func = util.get_all_functions(target);
 
@@ -75,8 +121,6 @@ describe('all abstraction should throw', () => {
 
         const target = BOM; 
 
-        //test_abstraction(target);
-
         const func = util.get_all_functions(target);
 
         func.forEach((f) => {
@@ -100,8 +144,6 @@ describe('all abstraction should throw', () => {
         const operation = new IOperation();
 
         const target = operation; 
-
-        //test_abstraction(target);
 
         const func = util.get_all_functions(target);
 
@@ -127,8 +169,6 @@ describe('all abstraction should throw', () => {
 
         const target = completion; 
 
-        //test_abstraction(target);
-
         const func = util.get_all_functions(target);
 
         func.forEach((f) => {
@@ -152,8 +192,6 @@ describe('all abstraction should throw', () => {
         const execution_work = new IExecutionWork();
 
         const target = execution_work; 
-
-        //test_abstraction(target);
 
         const func = util.get_all_functions(target);
 
@@ -225,6 +263,15 @@ describe('Plant', () => {
 
     });
 
+    it('Should return Time', async () => {
+        const time = new Time();
+
+        const result = await time.getTime();
+
+        expect(result).to.be.not.null;
+
+    });
+
     it('IWork should work', async () => {
         
         let t = 946681200000;
@@ -237,11 +284,17 @@ describe('Plant', () => {
 
         const operation = new Operation(); 
 
+        const bom = new BOM();
+
+        const stock = new StockManager();
+
         const final = {};
+
+        const stock_final = {};
 
         for(var production_day = 0; production_day < 5; production_day++)
         {
-            
+             
             const time = new Time(t = t + time_unit);
 
             const child_operations = {};
@@ -253,38 +306,39 @@ describe('Plant', () => {
                     const name = operation_factory[elem].name;
                     const child_op = operation_factory[elem].operations;
                     
-                    child_operations[name] = new ExecutionWork(name, operation, child_op, time);
+                    child_operations[name] = new ExecutionWork(name, operation, child_op, time, bom, stock);
                     
                 }
             }
 
-            const bom = new BOM();
-
-            const ew = new ExecutionWork('plant', new Operation(), child_operations, time, bom);
+            const ew = new ExecutionWork('plant', new Operation(), child_operations, time, bom, stock);
             
-            const result = new Completion(time);
+            const result = new Completion(time, stock);
 
             await ew.Work(new Pieces(200, 'ProductionOrder'), result, 'plant');
 
             final[t] = result.result;
-          
+
+            stock_final[t] = result.result; 
+            
         }
         
-        dbg('end date', new Date(t));
-        dbg('result', JSON.stringify(final, null, 4));
+        //dbg('end date', new Date(t));
+        //dbg('result', JSON.stringify(final, null, 4));
 
         const start_times = Object.keys(final);
 
         const station_table = {};
         const stock_table = {};
+        const warehouse_table = {};
 
-        dbg('time key',  start_times);
+        //dbg('time key',  start_times);
 
         //loop day
         for(let j = 0; j < start_times.length; j++)
         {
             const day =  final[start_times[j]];
-            dbg('work', j,);
+            //dbg('work', j,);
             //loop station
             const workUnits = Object.keys(day);
 
@@ -325,18 +379,46 @@ describe('Plant', () => {
             }
         }
 
-        dbg('station table', station_table);
-        dbg('stock table', stock_table);
+        // for(let j = 0; j < start_times.length; j++)
+        // {
+        //     const day =  final[start_times[j]];
+        //     //dbg('work', j,);
+        //     //loop station
+        //     const workUnits = Object.keys(day);
+
+        //     for(let k= 0; k < workUnits.length; k++)
+        //     {
+        //         const station = day[workUnits[k]];
+
+        //         const station_time = station.time;
+
+        //         const pieces_type = station.production.pieces.type;
+
+        //         if(undefined === warehouse_table[station_time])
+        //             warehouse_table[station_time] = {};
+        //         else
+        //         if(undefined === warehouse_table[station_time][pieces_type])
+        //             warehouse_table[station_time][pieces_type] = 0;
+
+        //         warehouse_table[station_time][pieces_type] = station.production.consumptionItems;
+
+        //     }
+        //}
+
+        // dbg('station table', station_table);
+        // dbg('stock table', stock_table);
+        dbg('daily consumption table table', JSON.stringify(warehouse_table, null, 4));
 
         const start_unit = 1;
 
-        dbg('time 2', start + ((2 + start_unit) * time_unit));
+        //dbg('time 2', start + ((2 + start_unit) * time_unit));
 
         expect(stock_table[start + ((2 + start_unit) * time_unit)].outAvv).to.be.eq(200);
         expect(station_table[start + ((2 + start_unit) * time_unit)].AVV).to.be.eq(200);
 
-        //expect(stock_table[start + ((4 + start_unit) * time_unit)].outAvv).to.be.eq(200);
         expect(station_table[start + ((4 + start_unit) * time_unit)].AVV).to.be.eq(200);
+
+        //dbg('stock_final', JSON.stringify(stock_final, null, 4));
     });
 
 });
