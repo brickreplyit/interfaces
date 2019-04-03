@@ -1,7 +1,7 @@
-const IExecutionWork = require('../../../lib/abstraction/IExecutionWork');
-const Pieces = require('../../../lib/entity/Pieces');
+const abstraction = require('../../../lib/abstraction/Index');
+const entities = require('../../../lib/entity/Index');
 
-class ExecutionWork extends IExecutionWork{
+class ExecutionWork extends abstraction.IExecutionWork{
 
     /**
      * 
@@ -26,6 +26,8 @@ class ExecutionWork extends IExecutionWork{
         this.Bom = IBom;
 
         this.StockManager = IStockManager;
+
+        this.TestTimeIncremental = 0;
     }
 
     /**
@@ -58,7 +60,7 @@ class ExecutionWork extends IExecutionWork{
 
         }else
         {
-            this.time.date += 1440 * 60 * 1000;
+            this.time.date += this.TestTimeIncremental;
 
             let piece_type = workID;
             let real_production_capacity = 200;
@@ -99,11 +101,11 @@ class ExecutionWork extends IExecutionWork{
 
                     await this.StockManager.Reserve(pieceToConsume.type, consumed);
 
-                    consumed_items.push(new Pieces(consumed, pieceToConsume.type));
+                    consumed_items.push(new entities.Pieces(consumed, pieceToConsume.type));
                 }
             }
             //this is a child
-            await ICompletion.SetComplete(new Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
+            await ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
         }
 
 

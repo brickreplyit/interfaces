@@ -1,5 +1,5 @@
 
-async function async_function() {};
+async function async_function() {}
 
 module.exports = {
 

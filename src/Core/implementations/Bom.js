@@ -1,4 +1,4 @@
-const IBom = require('../../../lib/abstraction/base/IBom');
+const abstraction = require('../../../lib/abstraction/Index');
 
 function filter_bom(bs, target)
 {
@@ -18,7 +18,7 @@ function filter_bom(bs, target)
     }
 }
 
-class Bom extends IBom{
+class Bom extends abstraction.IBom{
 
     constructor(){ 
         super();
