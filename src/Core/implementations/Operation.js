@@ -1,5 +1,4 @@
-const IOperation = require('../../../lib/abstraction/base/IOperation');
-const Pieces = require('../../../lib/entity/Pieces');
+const abstraction = require('../../../lib/abstraction');
 
 function filter_operations(ops, target)
 {
@@ -19,7 +18,7 @@ function filter_operations(ops, target)
     }
 }
 
-class Operation extends IOperation {
+class Operation extends abstraction.IOperation {
     constructor(){
         super();
 
@@ -27,6 +26,7 @@ class Operation extends IOperation {
            
             name : 'plant'
             , type : 'parent'
+            , child_join_type : 'sequential'
             , operations : [
                 {  
                     name: 'ARR'

@@ -1,4 +1,4 @@
-const IStockManager = require('../../../lib/abstraction/base/IStockManager');
+const abstraction = require('../../../lib/abstraction');
 
 function updateStockQuantityByType(stock, JSON_Key, piece_type, JSON_Key_To_Update, new_quantity){
     for (var i = 0; i < stock.length; i++) {
@@ -19,7 +19,7 @@ function findPieceByType(stock, JSON_Key, piece_type) {
     return null;
 }
 
-class StockManager extends IStockManager{
+class StockManager extends abstraction.IStockManager{
     
     constructor(){
         super();
@@ -43,6 +43,9 @@ class StockManager extends IStockManager{
         };
     }
 
+    async GetCurrentStock(){
+        return this.Warehouse.stocks;
+    }
     /**
      * 
      * @param {*} piece_type 
