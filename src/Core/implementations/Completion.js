@@ -1,4 +1,4 @@
-const abstraction = require('../../../lib/abstraction');
+const abstraction = require('../../../lib/abstraction/Index');
 
 class Completion extends abstraction.ICompletion{
 

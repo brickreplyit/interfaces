@@ -1,4 +1,4 @@
-const abstraction = require('../../../lib/abstraction');
+const abstraction = require('../../../lib/abstraction/Index');
 
 function filter_operations(ops, target)
 {
