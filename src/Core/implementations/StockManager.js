@@ -1,4 +1,4 @@
-const abstraction = require('../../../lib/abstraction/Index');
+const abstraction = require('../../../lib/abstraction');
 
 function updateStockQuantityByType(stock, JSON_Key, piece_type, JSON_Key_To_Update, new_quantity){
     for (var i = 0; i < stock.length; i++) {

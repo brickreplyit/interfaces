@@ -1,4 +1,4 @@
-const abstraction = require('../../../lib/abstraction/Index');
+const abstraction = require('../../../lib/abstraction');
 
 module.exports = class Time extends abstraction.ITime{
     constructor(date){
