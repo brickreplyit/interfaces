@@ -7,8 +7,6 @@ env:
   - NODE_ENV: production
 node_js:
 - 11
-- 10
-- 8
 cache: npm
 install:
 - npm install
