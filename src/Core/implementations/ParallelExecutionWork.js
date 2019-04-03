@@ -1,4 +1,4 @@
-const abstraction = require('../../../lib/abstraction');
+const abstraction = require('../../../lib/abstraction/index');
 
 class ParallelExecutionWork extends abstraction.IExecutionWork{
     /**

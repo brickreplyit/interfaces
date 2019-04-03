@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const util   = require('./utility');
-const abstraction = require('../../lib/abstraction/Index');
+const abstraction = require('../../lib/abstraction/index');
 
 async function test_throw(func)
 {
