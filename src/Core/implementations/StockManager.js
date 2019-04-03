@@ -43,9 +43,6 @@ class StockManager extends abstraction.IStockManager{
         };
     }
 
-    async GetCurrentStock(){
-        return this.Warehouse.stocks;
-    }
     /**
      * 
      * @param {*} piece_type 
