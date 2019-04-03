@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const util   = require('./utility');
-const abstraction = require('../../lib/abstraction/index');
+const abstractions = require('../../lib/abstraction/Index');
 
 async function test_throw(func)
 {
@@ -25,27 +25,27 @@ async function test_throw(func)
 
 describe('All abstraction should throw', () => {
    
-    // Object.keys(abstraction).forEach((abs) => {
-    //     describe(`${abs}`, () => {
-    //         const target = new abstraction[abs](); 
+    Object.keys(abstractions).forEach((abs) => {
+        describe(`${abs}`, () => {
+            const target = new abstractions[abs](); 
 
-    //         const func = util.get_all_functions(target);
+            const func = util.get_all_functions(target);
 
-    //         func.forEach((f) => {
+            func.forEach((f) => {
 
-    //             it('interface method ' + f + ' should throw', async () => {
+                it('interface method ' + f + ' should throw', async () => {
 
-    //                 const func = target[f];
+                    const func = target[f];
 
-    //                 const thrown = await test_throw(func);
+                    const thrown = await test_throw(func);
 
-    //                 expect(thrown).to.be.true;
+                    expect(thrown).to.be.true;
 
-    //             });
+                });
 
-    //         });
-    //     });
-    // });
+            });
+        });
+    });
 });
 
 

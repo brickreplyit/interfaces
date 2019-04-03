@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const utilities_execution_work = require('./utility.executionwork');
-const implementations = require('../../src/Core/index');
+const implementations = require('../../src/Core/Index');
 const dbg = require('debug')('platform:abstraction:test');
 
 describe('Plant', () => {

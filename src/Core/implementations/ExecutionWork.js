@@ -1,5 +1,5 @@
-const abstraction = require('../../../lib/abstraction/index');
-const entities = require('../../../lib/entity');
+const abstraction = require('../../../lib/abstraction/Index');
+const entities = require('../../../lib/entity/Index');
 
 class ExecutionWork extends abstraction.IExecutionWork{
 
