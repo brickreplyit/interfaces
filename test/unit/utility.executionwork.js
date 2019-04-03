@@ -1,4 +1,4 @@
-const entities = require('../../lib/entity/index');
+const entities = require('../../lib/entity/Index');
 const implementations = require('../../src/Core/Index');
 
 const dbg = require('debug')('platform:abstraction:test');
