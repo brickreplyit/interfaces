@@ -1,4 +1,4 @@
-const abstraction = require('../../../lib/abstraction/index');
+const abstraction = require('../../../lib/abstraction/Index');
 
 function filter_bom(bs, target)
 {
