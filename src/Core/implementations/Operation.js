@@ -46,6 +46,13 @@ class Operation extends abstraction.IOperation {
                     name: 'AVV'
                     , type : 'ARR'
                     , operations : []
+                    , works : []
+                    , outputs : [
+                        { 
+                            type: 'outAvv'
+                            , capacity : 200
+                        }
+                    ]
                        
                 }
                 , {
@@ -53,6 +60,13 @@ class Operation extends abstraction.IOperation {
                     name: 'PRS'
                     , type : 'ARR'
                     , operations : []
+                    , works : []
+                    , outputs : [
+                        { 
+                            type: 'outPrs'
+                            , capacity : 200
+                        }
+                    ]
                        
                 }
                 , {
@@ -60,6 +74,13 @@ class Operation extends abstraction.IOperation {
                     name: 'TRM'
                     , type : 'ARR'
                     , operations : []
+                    , works : []
+                    , outputs : [
+                        { 
+                            type: 'outTrm'
+                            , capacity : 200
+                        }
+                    ]
                        
                 }
                 , {
@@ -67,6 +88,13 @@ class Operation extends abstraction.IOperation {
                     name: 'ASS'
                     , type : 'ARR'
                     , operations : []
+                    , works : []
+                    , outputs : [
+                        { 
+                            type: 'Finished'
+                            , capacity : 200
+                        }
+                    ]
                        
                 }
             ]

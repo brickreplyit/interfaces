@@ -3,6 +3,14 @@ const implementations = require('../../src/Core/Index');
 
 const dbg = require('debug')('platform:abstraction:test');
 
+const log4js = require('log4js');
+log4js.configure({
+    appenders: { ew: { type: 'file', filename: 'ew.log' } }
+    ,categories: { default: { appenders: ['ew'], level: 'error' } }
+});
+
+const logger = log4js.getLogger('ew');
+
 function GenerateChildFactory(operation_factory, operation, bom, time, stockManager, testTimeIncremental){
     const child_operations = {};
 
@@ -34,6 +42,7 @@ async function TestFactory(workstation_time_unit, parent_work_type){
     const final = {};
     const produced_final = {};
     const stock_final = {};
+
     for(var production_day = 0; production_day < 5; production_day++)
     {
          
@@ -43,9 +52,14 @@ async function TestFactory(workstation_time_unit, parent_work_type){
         
         const result = new implementations.Completion(time, stock);
         await ew.Work(new entities.Pieces(200, 'ProductionOrder'), result, 'plant');
+        
+     
+
         final[t] = result.result;
         produced_final[t] = result.result;
         stock_final[t] = result.StockManager.Warehouse.stocks;
+
+        dbg('stocks', result.StockManager.Warehouse.stocks);
         
     }
 

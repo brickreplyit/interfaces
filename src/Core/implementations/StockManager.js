@@ -45,6 +45,21 @@ class StockManager extends abstraction.IStockManager{
 
     /**
      * 
+     * @param {*} pieces 
+     * @param {*} consumptionItems 
+     */
+    async ProduceAndConsume(produced_pieces, consumptionItems){
+        
+        await this.Produce(produced_pieces.type, produced_pieces.length);
+
+        for(let item = 0; item < consumptionItems.length; item++){
+            if(undefined !== consumptionItems[item] && null !== consumptionItems[item])
+                await this.Consume(consumptionItems[item].type, (consumptionItems[item]).length);
+        }
+    }
+
+    /**
+     * 
      * @param {*} piece_type 
      * @param {*} quantity 
      */
@@ -67,7 +82,7 @@ class StockManager extends abstraction.IStockManager{
         const piece = await findPieceByType(this.Warehouse.stocks, 'piece', piece_type);
 
         if(undefined !== piece && null !== piece){
-            return updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', piece.quantity + quantity);
+            return await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', piece.quantity + quantity);
         }
         
     }
@@ -84,15 +99,31 @@ class StockManager extends abstraction.IStockManager{
         if(undefined !== piece && null !== piece){
             if(piece.quantity > quantity){
                 await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved + quantity);
-                return updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', (piece.quantity - quantity));
+                await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', (piece.quantity - quantity));
+                return true;
             }
-            else {
+            else if(piece.quantity <= quantity && piece.quantity > 0){
                 await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved + piece.quantity);
-                return updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', 0);
+                await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', 0);
+                return true;
             }
+            else
+                return false;
         }
+    }
 
-       
+    /**
+     * 
+     * @param {*} piece_type 
+     * @param {*} quantity 
+     */
+    async ReserveRollback(piece_type, quantity)
+    {
+        const piece = await findPieceByType(this.Warehouse.stocks, 'piece', piece_type);
+        if(undefined !== piece && null !== piece){
+            await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'reserved', piece.reserved - quantity);
+            await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', piece.quantity + quantity);
+        }
     }
 }
 

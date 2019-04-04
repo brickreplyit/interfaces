@@ -52,8 +52,4 @@ describe('Plant', () => {
 
     it('Should Work join parent stations');
 
-    describe('Stock Manager', () => {
-        it('Should have a method to receive pieces and consumption');
-    });
-
-}); 
+});  

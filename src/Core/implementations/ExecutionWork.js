@@ -70,42 +70,47 @@ class ExecutionWork extends abstraction.IExecutionWork{
                 real_production_capacity = operations.outputs[0].capacity;
             }
 
-            switch(workID)
-            {
-
-            case 'AVV':
-                piece_type = 'outAvv';
-                break;
-            case 'PRS':
-                piece_type = 'outPrs';
-                break;
-            case 'TRM':
-                piece_type = 'outTrm';
-                break;
-            case 'ASS':
-                piece_type = 'Finished';
-                break;
-            }
-
             const bom = await this.Bom.GetBom(piece_type, workID);
 
             const consumed_items = [];
+
+            let can_produce = true;
+            let index_to_rollback = -1;
 
             if(undefined !== bom.inputs)
             {
                 for(let inp = 0; inp < bom.inputs.length; inp++)
                 {
+                    if(!can_produce)
+                        continue;
+
                     var pieceToConsume = bom.inputs[inp];
 
                     const consumed = (pieceToConsume.quantity) * real_production_capacity;
 
-                    await this.StockManager.Reserve(pieceToConsume.type, consumed);
+                    if(!(await this.StockManager.Reserve(pieceToConsume.type, consumed))){
+                        index_to_rollback = inp;
+                        can_produce = false;
+                    }
+                    else{
+                        consumed_items.push(new entities.Pieces(consumed, pieceToConsume.type));
+                    }
+                }
 
-                    consumed_items.push(new entities.Pieces(consumed, pieceToConsume.type));
+                if(!can_produce && index_to_rollback >= 0){
+                    for(let roll_index = 0; roll_index < index_to_rollback; roll_index++){
+                        var piece_to_rollback = bom.inputs[roll_index];
+
+                        const consumed_to_rollback = (piece_to_rollback.quantity) * real_production_capacity;
+
+                        await this.StockManager.ReserveRollback(piece_to_rollback.type, consumed_to_rollback);
+                    }
                 }
             }
-            //this is a child
-            await ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
+
+            if(can_produce)
+                //this is a child
+                await ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
         }
 
 
