@@ -42,11 +42,11 @@ describe('Plant', () => {
 
     });
 
-    it('Should Work with parallel children', async () => {
-        const test_tables =  await utilities_execution_work.TestFactory(0, implementations.ParallelExecutionWork);
+    // it('Should Work with parallel children', async () => {
+    //     const test_tables =  await utilities_execution_work.TestFactory(0, implementations.ParallelExecutionWork);
          
-        const start_unit = 1;
-    });
+    //     const start_unit = 1;
+    // });
 
     it('Should Work shared workstations semaphore (multiple lines)');
 

@@ -44,7 +44,7 @@ class Operation extends abstraction.IOperation {
                 , {
                        
                     name: 'AVV'
-                    , type : 'ARR'
+                    , type : 'AVV'
                     , operations : []
                     , works : []
                     , outputs : [
@@ -58,7 +58,7 @@ class Operation extends abstraction.IOperation {
                 , {
                        
                     name: 'PRS'
-                    , type : 'ARR'
+                    , type : 'PRS'
                     , operations : []
                     , works : []
                     , outputs : [
@@ -72,7 +72,7 @@ class Operation extends abstraction.IOperation {
                 , {
                        
                     name: 'TRM'
-                    , type : 'ARR'
+                    , type : 'TRM'
                     , operations : []
                     , works : []
                     , outputs : [
@@ -86,7 +86,7 @@ class Operation extends abstraction.IOperation {
                 , {
                        
                     name: 'ASS'
-                    , type : 'ARR'
+                    , type : 'ASS'
                     , operations : []
                     , works : []
                     , outputs : [

@@ -53,13 +53,19 @@ async function TestFactory(workstation_time_unit, parent_work_type){
         const result = new implementations.Completion(time, stock);
         await ew.Work(new entities.Pieces(200, 'ProductionOrder'), result, 'plant');
         
-     
+        logger.error(JSON.stringify(result.StockManager.Warehouse.stocks, null, 4)); 
+
 
         final[t] = result.result;
         produced_final[t] = result.result;
-        stock_final[t] = result.StockManager.Warehouse.stocks;
-
-        dbg('stocks', result.StockManager.Warehouse.stocks);
+        
+        for(let items of result.StockManager.Warehouse.stocks){
+            if(undefined ===  stock_final[t])
+                stock_final[t] = {};
+            if(undefined ===  stock_final[t][items.piece])
+                stock_final[t][items.piece] = {};
+            stock_final[t][items.piece] = items.quantity;
+        }
         
     }
 
@@ -105,17 +111,15 @@ async function TestFactory(workstation_time_unit, parent_work_type){
     for(let j = 0; j < start_times.length; j++)
     {
         const daily_stock =  stock_final[start_times[j]];
+        //logger.error(JSON.stringify(daily_stock, null, 4)); 
+       
+        if(undefined === warehouse_table[start_times[j]])
+            warehouse_table[start_times[j]] = {};
         
-        for(let item of daily_stock){
-            if(undefined === warehouse_table[start_times[j]])
-                warehouse_table[start_times[j]] = {};
-            else
-                warehouse_table[start_times[j]][item['piece']] = item['quantity']; 
-        }
-        
+        warehouse_table[start_times[j]] = daily_stock;    
     }
 
-    //dbg('warehouse', warehouse_table);
+    // logger.error(JSON.stringify(warehouse_table, null, 4)); 
 
     return {
         station_table

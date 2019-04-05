@@ -112,8 +112,6 @@ class ExecutionWork extends abstraction.IExecutionWork{
                 //this is a child
                 await ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
         }
-
-
     }
 }
 

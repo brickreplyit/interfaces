@@ -1,3 +1,4 @@
+const assert = require('assert');
 const abstraction = require('../../../lib/abstraction/Index');
 
 function updateStockQuantityByType(stock, JSON_Key, piece_type, JSON_Key_To_Update, new_quantity){
@@ -53,8 +54,8 @@ class StockManager extends abstraction.IStockManager{
         await this.Produce(produced_pieces.type, produced_pieces.length);
 
         for(let item = 0; item < consumptionItems.length; item++){
-            if(undefined !== consumptionItems[item] && null !== consumptionItems[item])
-                await this.Consume(consumptionItems[item].type, (consumptionItems[item]).length);
+            assert('Should exists the consumption Item', consumptionItems[item]);
+            await this.Consume(consumptionItems[item].type, (consumptionItems[item]).length);
         }
     }
 
