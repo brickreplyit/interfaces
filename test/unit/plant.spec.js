@@ -7,7 +7,7 @@ describe('Plant', () => {
     it('Should return BOM', async () => {
         const bom = new implementations.BOM();
 
-        let result = await bom.GetBom('Finished', null);
+        let result = await bom.GetBom('BOM_Finished', null);
 
         expect(result.boms.length).to.be.eq(5);
 
@@ -30,7 +30,7 @@ describe('Plant', () => {
 
     it('Should work with sequential children', async () => {
         
-        const test_tables =  await utilities_execution_work.TestFactory(1440 * 60 * 1000, implementations.ExecutionWork);
+        const test_tables =  await utilities_execution_work.TestFactory(1440 * 60 * 1000, implementations.SequentialExecutionWork);
          
         const start_unit = 1;
 
@@ -42,11 +42,11 @@ describe('Plant', () => {
 
     });
 
-    // it('Should Work with parallel children', async () => {
-    //     const test_tables =  await utilities_execution_work.TestFactory(0, implementations.ParallelExecutionWork);
+    it('Should Work with parallel children', async () => {
+        const test_tables =  await utilities_execution_work.TestFactory(0, implementations.ParallelExecutionWork);
          
-    //     const start_unit = 1;
-    // });
+        const start_unit = 1;
+    });
 
     it('Should Work shared workstations semaphore (multiple lines)');
 

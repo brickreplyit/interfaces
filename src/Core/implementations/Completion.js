@@ -25,7 +25,8 @@ class Completion extends abstraction.ICompletion{
                 pieces : produced_pieces
                 , operationTrack
                 , consumptionItems : consumptionItems
-            }
+            } 
+           
         };
     }
 

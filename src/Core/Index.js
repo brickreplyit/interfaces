@@ -1,4 +1,3 @@
-const ExecutionWork = require('./implementations/ExecutionWork');
 const ParallelExecutionWork = require('./implementations/ParallelExecutionWork');
 const SequentialExecutionWork = require('./implementations/SequentialExecutionWork');
 const Operation = require('./implementations/Operation');
@@ -8,8 +7,7 @@ const BOM = require('./implementations/Bom');
 const StockManager = require('./implementations/StockManager');
 
 module.exports = {
-    ExecutionWork
-    ,ParallelExecutionWork
+    ParallelExecutionWork
     ,SequentialExecutionWork
     ,Operation
     ,Completion

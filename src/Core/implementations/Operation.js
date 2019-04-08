@@ -31,7 +31,7 @@ class Operation extends abstraction.IOperation {
                 {  
                     name: 'ARR'
                     , type : 'ARR'
-                    , operations : []
+                    //, operations : []
                     , works : []
                     , outputs : [
                         { 

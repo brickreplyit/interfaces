@@ -39,18 +39,13 @@ async function test_throw(func)
 {
     let thrown = false;
 
-    try{
-        if(this.isAsync(func))
-        {
-            await func();
-        }
-        else
-        {
-            func();
-        }
-    }catch(err)
+    if(this.isAsync(func))
     {
-        thrown = true;
+        await func();
+    }
+    else
+    {
+        func();
     }
 
     return thrown;

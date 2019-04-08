@@ -24,7 +24,7 @@ class Bom extends abstraction.IBom{
         super();
 
         this.BOM = {
-            name : 'Finished'
+            name : 'BOM_Finished'
             , boms : [
                 { 
                     name : 'outArr', inputs : [ 
