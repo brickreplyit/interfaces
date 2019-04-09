@@ -40,6 +40,8 @@ describe('Plant', () => {
 
         expect(test_tables.station_table[test_tables.start + ((4 + start_unit) * test_tables.time_unit)].AVV).to.be.eq(200);
 
+        expect(test_tables.warehouse_final[test_tables.start + ((4 + start_unit) * test_tables.time_unit)].Finished).to.be.eq(1000);
+
     });
 
     it('Should Work with parallel children', async () => {

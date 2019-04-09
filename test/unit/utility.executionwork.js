@@ -63,8 +63,7 @@ async function TestFactory(workstation_time_unit, parent_work_type){
     const start_times = Object.keys(final);
     const station_table = {};
     const stock_table = {};
-    const warehouse_table = {};
-
+    const warehouse_final = {};
     //logger.error(JSON.stringify(stock_final, null ,4));
     //loop day
     for(let j = 0; j < start_times.length; j++)
@@ -84,6 +83,8 @@ async function TestFactory(workstation_time_unit, parent_work_type){
             else
             if(undefined === station_table[station_time][work_unit])
                 station_table[station_time][work_unit] = 0;
+            else
+                pieces = pieces + station_table[station_time][work_unit];
             station_table[station_time][work_unit] = pieces;
             pieces = station.production.pieces.length;
             if(undefined === stock_table[station_time])
@@ -91,15 +92,34 @@ async function TestFactory(workstation_time_unit, parent_work_type){
             else
             if(undefined === stock_table[station_time][pieces_type])
                 stock_table[station_time][pieces_type] = 0;
+            else
+                pieces = pieces + stock_table[station_time][pieces_type];
             stock_table[station_time][pieces_type] = pieces;
                             
+        }
+    }
+
+    for(let j = 0; j < start_times.length; j++)
+    {
+        const day =  stock_final[start_times[j]];
+
+        for(let k= 0; k < day.length; k++)
+        {
+            if(undefined === warehouse_final[start_times[j]])
+                warehouse_final[start_times[j]] = {};
+            else
+            if(undefined ===   warehouse_final[start_times[j]][day[k].piece])
+                warehouse_final[start_times[j]][day[k].piece] = 0;
+            
+            warehouse_final[start_times[j]][day[k].piece] = day[k].quantity;                      
         }
     }
 
     return {
         station_table
         ,stock_table  
-        , warehouse_table 
+        , stock_final 
+        , warehouse_final
         , start
         ,time_unit
     };
