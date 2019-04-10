@@ -1,26 +1,6 @@
 const expect = require('chai').expect;
 const util   = require('./utility');
 
-async function test_throw(func)
-{
-    let thrown = false;
-
-    try{
-        if(util.isAsync(func))
-        {
-            await func();
-        }
-        else
-        {
-            func();
-        }
-    }catch(err)
-    {
-        thrown = true;
-    }
-
-    return thrown;
-}
 
 
 describe('Test framework', ( )=>{
@@ -43,11 +23,11 @@ describe('Test framework', ( )=>{
         expect(functions).to.include('this_is_a_non_throwing_function');
         expect(functions).not.to.include('this_is_a_property');
 
-        let thrown = await test_throw(fake_tester.this_is_a_non_throwing_function);
+        let thrown = await util.test_throw(fake_tester.this_is_a_non_throwing_function);
 
         expect(thrown).to.be.false;
         
-        thrown = await test_throw(util.async_function);
+        thrown = await util.test_throw(util.async_function);
 
         expect(thrown).to.be.false;
     });

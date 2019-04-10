@@ -17,14 +17,7 @@ class Completion extends abstraction.ICompletion{
     {
         const produced_pieces = JSON.parse(JSON.stringify(pieces));
         
-        //START SPOSTARE IN COMPLETION
-        await this.StockManager.Produce(produced_pieces.type, produced_pieces.length);
-
-        for(let item = 0; item < consumptionItems.length; item++){
-            if(undefined !== item && null !== item)
-                await this.StockManager.Consume(consumptionItems[item].type, (consumptionItems[item]).length);
-        }
-        //END SPOSTARE IN COMPLETION
+        await this.StockManager.ProduceAndConsume(produced_pieces, consumptionItems);
 
         this.result[workId] =  { 
             time : this.time.getTime()
@@ -32,7 +25,8 @@ class Completion extends abstraction.ICompletion{
                 pieces : produced_pieces
                 , operationTrack
                 , consumptionItems : consumptionItems
-            }
+            } 
+           
         };
     }
 

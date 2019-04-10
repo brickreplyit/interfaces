@@ -1,7 +1,16 @@
 const entities = require('../../lib/entity/Index');
 const implementations = require('../../src/Core/Index');
+const moq = require('../moq/Index');
 
 const dbg = require('debug')('platform:abstraction:test');
+
+const log4js = require('log4js');
+log4js.configure({
+    appenders: { ew: { type: 'file', filename: 'ew.log' } }
+    ,categories: { default: { appenders: ['ew'], level: 'error' } }
+});
+
+const logger = log4js.getLogger('ew');
 
 function GenerateChildFactory(operation_factory, operation, bom, time, stockManager, testTimeIncremental){
     const child_operations = {};
@@ -13,7 +22,7 @@ function GenerateChildFactory(operation_factory, operation, bom, time, stockMana
             const name = operation_factory[elem].name;
             const child_op = operation_factory[elem].operations;
             
-            child_operations[name] = new implementations.ExecutionWork(name, operation, child_op, time, bom, stockManager);
+            child_operations[name] = new moq.ExecutionWorkMoq(name, operation, child_op, time, bom, stockManager);
             child_operations[name].TestTimeIncremental = testTimeIncremental;
             
         }
@@ -34,26 +43,28 @@ async function TestFactory(workstation_time_unit, parent_work_type){
     const final = {};
     const produced_final = {};
     const stock_final = {};
+
     for(var production_day = 0; production_day < 5; production_day++)
     {
-         
         const time = new implementations.Time(t = t + time_unit);
         const child_operations = GenerateChildFactory(operation_factory, operation, bom, time, stock, workstation_time_unit);
         const ew = new parent_work_type('plant', new implementations.Operation(), child_operations, time, bom, stock);
         
         const result = new implementations.Completion(time, stock);
         await ew.Work(new entities.Pieces(200, 'ProductionOrder'), result, 'plant');
+
+        const json_stock = await stock.Get();
+
         final[t] = result.result;
         produced_final[t] = result.result;
-        stock_final[t] = result.StockManager.Warehouse.stocks;
-        
+        stock_final[t] = JSON.parse(JSON.stringify(json_stock));
     }
 
     const start_times = Object.keys(final);
     const station_table = {};
     const stock_table = {};
-    const warehouse_table = {};
-
+    const warehouse_final = {};
+    //logger.error(JSON.stringify(stock_final, null ,4));
     //loop day
     for(let j = 0; j < start_times.length; j++)
     {
@@ -90,24 +101,26 @@ async function TestFactory(workstation_time_unit, parent_work_type){
 
     for(let j = 0; j < start_times.length; j++)
     {
-        const daily_stock =  stock_final[start_times[j]];
-        
-        for(let item of daily_stock){
-            if(undefined === warehouse_table[start_times[j]])
-                warehouse_table[start_times[j]] = {};
-            else
-                warehouse_table[start_times[j]][item['piece']] = item['quantity']; 
-        }
-        
-    }
+        const day =  stock_final[start_times[j]];
 
-    //dbg('warehouse', warehouse_table);
+        for(let k= 0; k < day.length; k++)
+        {
+            if(undefined === warehouse_final[start_times[j]])
+                warehouse_final[start_times[j]] = {};
+            else
+            if(undefined ===   warehouse_final[start_times[j]][day[k].piece])
+                warehouse_final[start_times[j]][day[k].piece] = 0;
+            
+            warehouse_final[start_times[j]][day[k].piece] = day[k].quantity;                      
+        }
+    }
 
     return {
         station_table
-        ,stock_table 
-        , warehouse_table 
-        , start
+        ,stock_table  
+        ,stock_final 
+        ,warehouse_final
+        ,start
         ,time_unit
     };
 }

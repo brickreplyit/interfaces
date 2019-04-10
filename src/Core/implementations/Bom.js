@@ -24,32 +24,37 @@ class Bom extends abstraction.IBom{
         super();
 
         this.BOM = {
-            name : 'Finished'
+            name : 'BOM_Finished'
             , boms : [
-                { name : 'outArr', inputs : [ 
-                    {type : 'Plast A', quantity : 1}
-                    ,{type : 'Faston', quantity : 2}
-                ]
+                { 
+                    name : 'outArr', inputs : [ 
+                        {type : 'Plast A', quantity : 1}
+                        ,{type : 'Faston', quantity : 2}
+                    ]
                 }
-                , { name : 'outAvv', inputs : [ 
-                    {type : 'outArr', quantity : 1}
-                    ,{type : 'Rame', quantity : 1}
-                ]
+                , { 
+                    name : 'outAvv', inputs : [ 
+                        {type : 'outArr', quantity : 1}
+                        ,{type : 'Rame', quantity : 1}
+                    ]
                 }
-                , { name : 'outPrs', inputs : [ 
-                    {type : 'Plast B', quantity : 1}
-                    ,{type : 'outAvv', quantity : 1}
-                ]
+                , {
+                    name : 'outPrs', inputs : [ 
+                        {type : 'Plast B', quantity : 1}
+                        ,{type : 'outAvv', quantity : 1}
+                    ]
                 }
-                , { name : 'outTrm', inputs : [ 
-                    {type : 'Plast C', quantity : 1}
-                ]
+                , { 
+                    name : 'outTrm', inputs : [ 
+                        {type : 'Plast C', quantity : 1}
+                    ]
                 }
-                , { name : 'Finished', inputs : [ 
-                    {type : 'outPrs', quantity : 1}
-                    ,{type : 'outTrm', quantity : 1}
-                    ,{type : 'min', quantity : 5}
-                ]
+                , { 
+                    name : 'Finished', inputs : [ 
+                        {type : 'outPrs', quantity : 1}
+                        ,{type : 'outTrm', quantity : 1}
+                        ,{type : 'Min', quantity : 5}
+                    ]
                 }
             ]
         };

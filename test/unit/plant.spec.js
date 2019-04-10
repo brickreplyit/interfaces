@@ -7,7 +7,7 @@ describe('Plant', () => {
     it('Should return BOM', async () => {
         const bom = new implementations.BOM();
 
-        let result = await bom.GetBom('Finished', null);
+        let result = await bom.GetBom('BOM_Finished', null);
 
         expect(result.boms.length).to.be.eq(5);
 
@@ -30,7 +30,7 @@ describe('Plant', () => {
 
     it('Should work with sequential children', async () => {
         
-        const test_tables =  await utilities_execution_work.TestFactory(1440 * 60 * 1000, implementations.ExecutionWork);
+        const test_tables =  await utilities_execution_work.TestFactory(1440 * 60 * 1000, implementations.SequentialExecutionWork);
          
         const start_unit = 1;
 
@@ -39,6 +39,8 @@ describe('Plant', () => {
         expect(test_tables.station_table[test_tables.start + ((2 + start_unit) * test_tables.time_unit)].AVV).to.be.eq(200);
 
         expect(test_tables.station_table[test_tables.start + ((4 + start_unit) * test_tables.time_unit)].AVV).to.be.eq(200);
+
+        expect(test_tables.warehouse_final[test_tables.start + ((4 + start_unit) * test_tables.time_unit)].Finished).to.be.eq(1000);
 
     });
 
@@ -52,8 +54,4 @@ describe('Plant', () => {
 
     it('Should Work join parent stations');
 
-    describe('Stock Manager', () => {
-        it('Should have a method to receive pieces and consumption');
-    });
-
-}); 
+});  

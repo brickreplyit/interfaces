@@ -1,45 +1,59 @@
 
 async function async_function() {}
 
-module.exports = {
+function isAsync(func)
+{
+    const AsyncFunction = (async_function).constructor;
 
-    get_all_functions(obj) {
+    return (func instanceof AsyncFunction);
+}
 
-        let props = [];
+function get_all_functions(obj) {
 
-        const target = obj;
-    
-        while (null != Object.getPrototypeOf(obj) ) {
-                        
-            //if('object' === typeof obj)
-            //    break;
+    let props = [];
 
-            props = props.concat(Object.getOwnPropertyNames(obj));
+    const target = obj;
 
-            obj = Object.getPrototypeOf(obj);
-
-        }
-    
-        return props.sort().filter(function(e, i, arr) { 
+    while (null != Object.getPrototypeOf(obj) ) {
             
-            if('constructor' === e)
-                return false;
+        props = props.concat(Object.getOwnPropertyNames(obj));
 
-            if (e != arr[i+1] && typeof target[e] === 'function') 
-                return true;
+        obj = Object.getPrototypeOf(obj);
 
+    }
+
+    return props.sort().filter(function(e, i, arr) { 
+        
+        if('constructor' === e)
             return false;
-        });
-    }
 
-    , async_function
-    
-    , isAsync(func)
+        if (e != arr[i+1] && typeof target[e] === 'function') 
+            return true;
+
+        return false;
+    });
+}
+
+
+async function test_throw(func)
+{
+    let thrown = false;
+
+    if(this.isAsync(func))
     {
-        //const AsyncFunction = (async () => {}).constructor;
-        const AsyncFunction = (async_function).constructor;
-
-        return (func instanceof AsyncFunction);
+        await func();
+    }
+    else
+    {
+        func();
     }
 
+    return thrown;
+}
+
+module.exports = {
+    get_all_functions
+    , async_function
+    , isAsync
+    , test_throw
 };

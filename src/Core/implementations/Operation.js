@@ -31,7 +31,7 @@ class Operation extends abstraction.IOperation {
                 {  
                     name: 'ARR'
                     , type : 'ARR'
-                    , operations : []
+                    //, operations : []
                     , works : []
                     , outputs : [
                         { 
@@ -44,29 +44,57 @@ class Operation extends abstraction.IOperation {
                 , {
                        
                     name: 'AVV'
-                    , type : 'ARR'
+                    , type : 'AVV'
                     , operations : []
+                    , works : []
+                    , outputs : [
+                        { 
+                            type: 'outAvv'
+                            , capacity : 200
+                        }
+                    ]
                        
                 }
                 , {
                        
                     name: 'PRS'
-                    , type : 'ARR'
+                    , type : 'PRS'
                     , operations : []
+                    , works : []
+                    , outputs : [
+                        { 
+                            type: 'outPrs'
+                            , capacity : 200
+                        }
+                    ]
                        
                 }
                 , {
                        
                     name: 'TRM'
-                    , type : 'ARR'
+                    , type : 'TRM'
                     , operations : []
+                    , works : []
+                    , outputs : [
+                        { 
+                            type: 'outTrm'
+                            , capacity : 200
+                        }
+                    ]
                        
                 }
                 , {
                        
                     name: 'ASS'
-                    , type : 'ARR'
+                    , type : 'ASS'
                     , operations : []
+                    , works : []
+                    , outputs : [
+                        { 
+                            type: 'Finished'
+                            , capacity : 200
+                        }
+                    ]
                        
                 }
             ]
