@@ -2,7 +2,7 @@
   "name": "platform",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/App/Server.js",
   "scripts": {
     "test": "mocha ./test//**/*.spec.js",
     "cov-test": "nyc --exclude 'dist/**' --exclude 'spec/**' --reporter text npm test",
@@ -25,8 +25,11 @@
     "coveralls": "^3.0.3",
     "debug": "^4.1.1",
     "eslint": "^5.12.1",
+    "express": "^4.16.4",
+    "koa": "^2.7.0",
     "log4js": "^4.1.0",
     "mocha": "^5.2.0",
+    "mqtt": "^2.18.8",
     "nyc": "^13.1.0"
   }
 }

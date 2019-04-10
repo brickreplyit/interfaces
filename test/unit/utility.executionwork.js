@@ -118,9 +118,9 @@ async function TestFactory(workstation_time_unit, parent_work_type){
     return {
         station_table
         ,stock_table  
-        , stock_final 
-        , warehouse_final
-        , start
+        ,stock_final 
+        ,warehouse_final
+        ,start
         ,time_unit
     };
 }
