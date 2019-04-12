@@ -13,11 +13,10 @@ class MQTT extends abstractions.IMQTT{
      * @param {*} mqtt_endpoint 
      * @param {*} topics 
      */
-    constructor(logger, mqtt_endpoint, topics){
+    constructor(logger, mqtt_endpoint){
         super();
         this.logger = logger;
         this.client = mqtt.connect(mqtt_endpoint);
-        this.Init(topics);
     }
 
     /**
@@ -60,10 +59,15 @@ class MQTT extends abstractions.IMQTT{
         assert(topic);
         assert(JSON_to_send);
         
-        this.client.on('connect', () => {
+        if(this.client.connected){
             this.logger.info(`MQTT Publisher Client Connected -> ${new Date()}`);
-            this.client.publish(topic, JSON.stringify(JSON_to_send));
-        });
+            this.client.publish(topic, JSON.stringify(JSON_to_send), {qos: 2, retain: true});
+        }
+        else
+            this.client.on('connect', () => {
+                this.logger.info(`MQTT Publisher Client Connected -> ${new Date()}`);
+                this.client.publish(topic, JSON.stringify(JSON_to_send), {qos: 2, retain: true});
+            });
     }
 
     /**

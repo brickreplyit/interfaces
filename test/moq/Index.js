@@ -1,9 +1,11 @@
 const ExecutionWorkMoq = require('./ExecutionWorkMoq');
-const ExecutionWorkStub = require('./ExecutionWorkStub');
 const ExecutionWorkProxy = require('./ExecutionWorkProxy');
+const ExecutionWorkDevice = require('./ExecutionWorkDevice');
+const ExecutionWorkDeviceConnector = require('./ExecutionWorkDeviceConnector');
 
 module.exports = {
     ExecutionWorkMoq
-    , ExecutionWorkStub
     , ExecutionWorkProxy
-}
+    , ExecutionWorkDevice
+    , ExecutionWorkDeviceConnector
+};

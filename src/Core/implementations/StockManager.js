@@ -88,9 +88,7 @@ class StockManager extends abstraction.IStockManager{
     {
         const piece = await findPieceByType(this.Warehouse.stocks, 'piece', piece_type);
 
-        if(undefined !== piece && null !== piece){
-            await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', piece.quantity - quantity);
-        }
+        await updateStockQuantityByType(this.Warehouse.stocks, 'piece', piece_type, 'quantity', piece.quantity - quantity);
     }
 
     /**

@@ -32,12 +32,7 @@ log4js.configure({
 const SYSTEM_LOGGER = log4js.getLogger('system');
 const MQTT_LOGGER = log4js.getLogger('mqtt');
 
-function Sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 module.exports = {
     MQTT_LOGGER
     , SYSTEM_LOGGER
-    , Sleep
 };

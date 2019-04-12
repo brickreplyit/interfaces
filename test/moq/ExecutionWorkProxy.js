@@ -1,78 +1,87 @@
-const executionWorkStub = require('./ExecutionWorkStub');
+const ExecutionWorkDeviceConnector = require('./ExecutionWorkDeviceConnector');
 const abstraction = require('../../lib/abstraction/Index');
 const entities = require('../../lib/entity/Index');
 const common = require('../../src/App/common/common');
-const mqtt = require('../../src/App/infrastructure/mqtt/asyncMqtt');
+const MQTT = require('../../src/App/infrastructure/mqtt/mqtt');
 const config = global.gConfig;
-const conn_string = config.test.integration.MQTT_ENDPOINT || 'mqtt://0.0.0.0:1883';
+const conn_string = config.test.integration.MQTT_ENDPOINT;
 
 class ExecutionWorkProxy extends abstraction.IExecutionWork{
-
     /**
-     * 
-     * @param {*} whoIam 
-     * @param {*} IOperations 
-     * @param {*} child_operations 
-     * @param {*} ITime 
-     * @param {*} IBom 
-     * @param {*} IStockManager 
-     */
+         * 
+         * @param {*} whoIam 
+         * @param {*} IOperations 
+         * @param {*} child_operations 
+         * @param {*} ITime 
+         * @param {*} IBom 
+         * @param {*} IStockManager 
+         */
     constructor(whoIam, IOperations, child_operations, ITime, IBom, IStockManager){
         super();
-
+    
         this.whoIam = whoIam;
-        
+            
         this.child_operations = child_operations;
-
+    
         this.operations = IOperations;
-
+    
         this.time = ITime;
-
+    
         this.Bom = IBom;
-
+    
         this.StockManager = IStockManager;
-
+    
         this.TestTimeIncremental = 0;
-
-        this.MQTT_CLIENT = new mqtt(common.MQTT_LOGGER, conn_string);
-        
     }
-
-    async Connect(ICompletion){
-        await this.MQTT_CLIENT.Init([this.whoIam + '_RESPONSE']);
-
-        this.MQTT_CLIENT.RegisterMessageLogic(async (topic, message) => {
-            console.log('Proxy received');
-            const result = JSON.parse(message.toString());
-
-            await ICompletion.SetComplete(new entities.Pieces(result.real_production_capacity, result.piece_type), result.workID, {}, result.consumed_items);
-
-            await this.MQTT_CLIENT.Publish(this.whoIam + '_COMPLETED', { ICompletion });
-        }); 
-    }
-
+    
     /**
-     * 
-     * @param {*} pieces 
-     * @param {*} ICompletion 
-     * @param {*} workID 
-     */
+         * 
+         * @param {*} pieces 
+         * @param {*} ICompletion 
+         * @param {*} workID 
+         */
     async Work(pieces, ICompletion, workID)
     {
-        const stub = new executionWorkStub(this.whoIam, this.operations, this.child_operations || [], this.time, this.Bom, this.StockManager);
+        const connector = new ExecutionWorkDeviceConnector(new MQTT(common.MQTT_LOGGER, conn_string), this.whoIam);
 
-        await stub.Connect(); 
+        const operations = await this.operations.GetOperation(pieces, workID);
 
-        await this.Connect(ICompletion);
+        this.time.date += this.TestTimeIncremental;
+    
+        let piece_type = workID;
+        let real_production_capacity = 200;
+    
+        if(undefined !== operations.outputs){
+            piece_type = operations.outputs[0].type;
+            real_production_capacity = operations.outputs[0].capacity;
+        }
+    
+        const bom = await this.Bom.GetBom(piece_type, workID);
+    
+        const consumed_items = [];
+    
+        if(undefined !== bom.inputs)
+        {
+            for(let inp = 0; inp < bom.inputs.length; inp++)
+            {
+                var pieceToConsume = bom.inputs[inp];
+    
+                const consumed = (pieceToConsume.quantity) * real_production_capacity;
+    
+                consumed_items.push(new entities.Pieces(consumed, pieceToConsume.type));
+            }
+        }
 
-        const message = {
-            pieces_lst : pieces
-            , completion : ICompletion
-            , work_id : workID 
-        };
+        connector.Start(new entities.Pieces(real_production_capacity, piece_type), operations.works);
 
-        await this.MQTT_CLIENT.Publish(this.whoIam + '_REQUEST', message);
+        return new Promise((resolve, reject) => {
+            connector.End((topic, message) => {
+                connector.Destroy();
+    
+                ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items).then(() => { resolve(); }).catch((err) => { reject(err); });
+            });
+        });
     }
 }
-
+    
 module.exports = ExecutionWorkProxy;
