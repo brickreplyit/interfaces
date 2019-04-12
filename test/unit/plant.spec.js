@@ -1,9 +1,11 @@
 const expect = require('chai').expect;
+const assert = require('assert');
 const utilities_execution_work = require('./utility.executionwork');
 const implementations = require('../../src/Core/Index');
 const dbg = require('debug')('platform:abstraction:test');
 
 describe('Plant', () => {
+
     it('Should return BOM', async () => {
         const bom = new implementations.BOM();
 
@@ -28,9 +30,24 @@ describe('Plant', () => {
 
     });
 
-    it('Should work with sequential children', async () => {
+    // it('Should work with sequential children', async () => {
         
-        const test_tables =  await utilities_execution_work.TestFactory(1440 * 60 * 1000, implementations.SequentialExecutionWork);
+    //     const test_tables =  await utilities_execution_work.TestFactory(1440 * 60 * 1000, implementations.SequentialExecutionWork);
+         
+    //     const start_unit = 1;
+
+    //     expect(test_tables.stock_table[test_tables.start + ((2 + start_unit) * test_tables.time_unit)].outAvv).to.be.eq(200);
+
+    //     expect(test_tables.station_table[test_tables.start + ((2 + start_unit) * test_tables.time_unit)].AVV).to.be.eq(200);
+
+    //     expect(test_tables.station_table[test_tables.start + ((4 + start_unit) * test_tables.time_unit)].AVV).to.be.eq(200);
+
+    //     expect(test_tables.warehouse_final[test_tables.start + ((4 + start_unit) * test_tables.time_unit)].Finished).to.be.eq(1000);
+
+    // });
+
+    it('Should work with sequential children MQTT', async () => {
+        const test_tables =  await utilities_execution_work.TestFactoryMQTT(1440 * 60 * 1000, implementations.AsyncExecutionWork);
          
         const start_unit = 1;
 
@@ -41,7 +58,6 @@ describe('Plant', () => {
         expect(test_tables.station_table[test_tables.start + ((4 + start_unit) * test_tables.time_unit)].AVV).to.be.eq(200);
 
         expect(test_tables.warehouse_final[test_tables.start + ((4 + start_unit) * test_tables.time_unit)].Finished).to.be.eq(1000);
-
     });
 
     it('Should Work with parallel children', async () => {

@@ -50,9 +50,10 @@ class SequentialExecutionWork extends abstraction.IExecutionWork{
             const IExecWork = this.child_operations[op.type];
                 
             await IExecWork.Work(work_pieces, ICompletion, op.name);
-
+            
             const worked = await ICompletion.GetPieces(op.name);
-            work_pieces = worked.production.pieces;
+            work_pieces = worked.production.pieces; 
+            
         }
 
         await ICompletion.SetComplete(pieces, workID, {}, []);  

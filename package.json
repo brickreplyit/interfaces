@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/piexmuss/platform#readme",
   "dependencies": {
+    "async-mqtt": "^2.2.1",
     "chai": "^4.2.0",
     "codecov": "^3.2.0",
     "coveralls": "^3.0.3",
@@ -27,6 +28,7 @@
     "eslint": "^5.12.1",
     "express": "^4.16.4",
     "koa": "^2.7.0",
+    "lodash": "^4.17.11",
     "log4js": "^4.1.0",
     "mocha": "^5.2.0",
     "mqtt": "^2.18.8",
