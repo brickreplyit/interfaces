@@ -35,9 +35,9 @@ class ExecutionWorkDeviceConnector {
     }
 
     Destroy(){
-        this.MQTT_BROKER.End();
-
         this.Device.Destroy();
+        
+        this.MQTT_BROKER.End();
     }
 }
 

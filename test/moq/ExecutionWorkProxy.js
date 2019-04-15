@@ -75,10 +75,13 @@ class ExecutionWorkProxy extends abstraction.IExecutionWork{
         connector.Start(new entities.Pieces(real_production_capacity, piece_type), operations.works);
 
         return new Promise((resolve, reject) => {
-            connector.End((topic, message) => {
-                connector.Destroy();
-    
-                ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items).then(() => { resolve(); }).catch((err) => { reject(err); });
+            connector.End((topic, message) => {    
+                ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items).then(() => { 
+                    connector.Destroy();
+
+                    resolve(); 
+                }).catch((err) => { reject(err); });
+
             });
         });
     }

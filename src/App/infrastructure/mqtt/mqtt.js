@@ -43,6 +43,17 @@ class MQTT extends abstractions.IMQTT{
     }
 
     /**
+     * 
+     * @param {*} topics 
+     */
+    UnSubscribeAll(topics){
+        topics.forEach((topic) => {
+            this.client.unsubscribe(topic);
+            this.logger.info(`UnSubscribed to topic ${topic} -> ${new Date()}`);
+        });
+    }
+
+    /**
      * associate the Publisher Logic
      * @param {*} function_to_execute 
      */
