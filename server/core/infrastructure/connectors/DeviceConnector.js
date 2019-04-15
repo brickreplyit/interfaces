@@ -1,6 +1,6 @@
-const Device = require('./ExecutionWorkDevice');
+const Device = require('../devices/Device');
 
-class ExecutionWorkDeviceConnector {
+class DeviceConnector {
 
     constructor(MQTT_BROKER, whoIam){
         
@@ -41,4 +41,4 @@ class ExecutionWorkDeviceConnector {
     }
 }
 
-module.exports = ExecutionWorkDeviceConnector;
+module.exports = DeviceConnector;

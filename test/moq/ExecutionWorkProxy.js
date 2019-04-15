@@ -1,8 +1,8 @@
-const ExecutionWorkDeviceConnector = require('./ExecutionWorkDeviceConnector');
+const ExecutionWorkDeviceConnector = require('../../server/core/infrastructure/connectors/DeviceConnector');
 const abstraction = require('../../lib/abstraction/Index');
 const entities = require('../../lib/entity/Index');
-const common = require('../../src/App/common/common');
-const MQTT = require('../../src/App/infrastructure/mqtt/mqtt');
+const common = require('../../server/core/common/common');
+const MQTT = require('../../server/core/infrastructure/mqtt/mqtt');
 const config = global.gConfig;
 const conn_string = config.test.integration.MQTT_ENDPOINT;
 
@@ -42,7 +42,7 @@ class ExecutionWorkProxy extends abstraction.IExecutionWork{
          */
     async Work(pieces, ICompletion, workID)
     {
-        const connector = new ExecutionWorkDeviceConnector(new MQTT(common.MQTT_LOGGER, conn_string), this.whoIam);
+        
 
         const operations = await this.operations.GetOperation(pieces, workID);
 
@@ -72,6 +72,19 @@ class ExecutionWorkProxy extends abstraction.IExecutionWork{
             }
         }
 
+        const work_mode = await this.operations.GetOperationWorkMode(workID);
+
+        switch(work_mode){
+        case 'DEVICE' :
+            return this.WorkDevice(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
+        default : 
+            return this.WorkStandard(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
+        }
+    }
+
+    WorkDevice(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items){
+        const connector = new ExecutionWorkDeviceConnector(new MQTT(common.MQTT_LOGGER, conn_string), this.whoIam);
+
         connector.Start(new entities.Pieces(real_production_capacity, piece_type), operations.works);
 
         return new Promise((resolve, reject) => {
@@ -84,6 +97,10 @@ class ExecutionWorkProxy extends abstraction.IExecutionWork{
 
             });
         });
+    }
+
+    async WorkStandard(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items){
+        return await ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items);
     }
 }
     

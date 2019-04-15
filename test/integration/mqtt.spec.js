@@ -1,8 +1,8 @@
 const expect = require('chai').expect;
 const utilities_execution_work = require('../unit/utility.executionwork');
-const implementations = require('../../src/Core/Index');
-const common = require('../../src/App/common/common');
-const mqtt = require('../../src/App/infrastructure/mqtt/mqtt');
+const implementations = require('../../server/core/Index');
+const common = require('../../server/core/common/common');
+const mqtt = require('../../server/core/infrastructure/mqtt/mqtt');
 const config = global.gConfig;
 const conn_string = config.test.integration.MQTT_ENDPOINT;
 
