@@ -36,7 +36,7 @@ class ExecutionWorkDeviceConnector {
 
     Destroy(){
         this.Device.Destroy();
-        
+
         this.MQTT_BROKER.End();
     }
 }

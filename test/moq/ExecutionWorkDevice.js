@@ -14,11 +14,11 @@ class ExecutionWorkDevice {
     }
 
     Init(){
+        this.MQTT_DEVICE_BROKER.Init([this.topic_in]);
+
         this.MQTT_DEVICE_BROKER.RegisterMessageLogic((topic, message) => {
             this.Work(JSON.parse(message.toString()).pieces.length);
         });
-
-        this.MQTT_DEVICE_BROKER.Init([this.topic_in]);
     }
 
     Work(length){

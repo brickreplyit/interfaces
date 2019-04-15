@@ -16,7 +16,10 @@ class MQTT extends abstractions.IMQTT{
     constructor(logger, mqtt_endpoint){
         super();
         this.logger = logger;
-        this.client = mqtt.connect(mqtt_endpoint);
+        this.client = mqtt.connect(mqtt_endpoint, {
+            resubscribe : true
+            , clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8)
+        });
     }
 
     /**
