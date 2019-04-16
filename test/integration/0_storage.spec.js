@@ -10,6 +10,16 @@ describe('STORAGE', () => {
             await DB.Seed('TEST_COLLECTION', 'TEST_DB');
         });
 
+        it('Should Seed Test Env Data', async () => {
+            const DB = new Storage(Url);
+
+            try{
+                await DB.Seed('ProductionDocument', 'EW');
+            }catch(err){
+                console.log(err);
+            }
+        });
+
         it('Should Get Data', async () => {
             const DB = new Storage(Url);
 
