@@ -1,4 +1,5 @@
 const ExecutionWorkDeviceConnector = require('../../server/core/infrastructure/connectors/DeviceConnector');
+const ExecutionWorkManualConnector= require('../../server/core/infrastructure/connectors/ManualConnector');
 const abstraction = require('../../lib/abstraction/Index');
 const entities = require('../../lib/entity/Index');
 const common = require('../../server/core/common/common');
@@ -77,9 +78,28 @@ class ExecutionWorkProxy extends abstraction.IExecutionWork{
         switch(work_mode){
         case 'DEVICE' :
             return this.WorkDevice(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
+        case 'MANUAL' :
+            return this.WorkManual(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
         default : 
             return this.WorkStandard(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
         }
+    }
+
+    WorkManual(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items){
+        const connector = new ExecutionWorkManualConnector(new MQTT(common.MQTT_LOGGER, conn_string), this.whoIam, 'mongodb://0.0.0.0:27017/');
+
+        connector.Start(new entities.Pieces(real_production_capacity, piece_type), operations.works);
+
+        return new Promise((resolve, reject) => {
+            connector.End((topic, message) => {    
+                ICompletion.SetComplete(new entities.Pieces(real_production_capacity, piece_type), workID, {}, consumed_items).then(() => { 
+                    connector.Destroy();
+
+                    resolve(); 
+                }).catch((err) => { reject(err); });
+
+            });
+        });
     }
 
     WorkDevice(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items){

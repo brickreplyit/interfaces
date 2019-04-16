@@ -5,6 +5,7 @@ const Completion = require('./implementations/Completion');
 const Time = require('./implementations/Time');
 const BOM = require('./implementations/Bom');
 const StockManager = require('./implementations/StockManager');
+const MongoDBStorage = require('./infrastructure/storage/MongoDBStorage');
 
 module.exports = {
     ParallelExecutionWork
@@ -14,4 +15,5 @@ module.exports = {
     ,Time
     ,BOM
     ,StockManager
+    ,MongoDBStorage
 };

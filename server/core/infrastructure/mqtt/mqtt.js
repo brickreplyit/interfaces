@@ -75,12 +75,27 @@ class MQTT extends abstractions.IMQTT{
         
         if(this.client.connected){
             this.logger.info(`MQTT Publisher Client Connected -> ${new Date()}`);
-            this.client.publish(topic, JSON.stringify(JSON_to_send), {qos: 2, retain: true});
+            this.client.publish(topic, JSON.stringify(JSON_to_send), {qos: 2});
         }
         else
             this.client.on('connect', () => {
                 this.logger.info(`MQTT Publisher Client Connected -> ${new Date()}`);
-                this.client.publish(topic, JSON.stringify(JSON_to_send), {qos: 2, retain: true});
+                this.client.publish(topic, JSON.stringify(JSON_to_send), {qos: 2});
+            });
+    }
+
+    PublishCallback(topic, JSON_to_send, callback){
+        assert(topic);
+        assert(JSON_to_send);
+        
+        if(this.client.connected){
+            this.logger.info(`MQTT Publisher Client Connected -> ${new Date()}`);
+            this.client.publish(topic, JSON.stringify(JSON_to_send), {qos: 2}, callback);
+        }
+        else
+            this.client.on('connect', () => {
+                this.logger.info(`MQTT Publisher Client Connected -> ${new Date()}`);
+                this.client.publish(topic, JSON.stringify(JSON_to_send), {qos: 2}, callback);
             });
     }
 

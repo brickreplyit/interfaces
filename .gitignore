@@ -60,8 +60,9 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-./src/client/node_modules/
-
+./client/node_modules/
+client/node_modules/
+/client/node_modules/
 # TypeScript v1 declaration files
 typings/
 

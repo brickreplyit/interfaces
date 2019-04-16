@@ -14,6 +14,7 @@ services:
 - docker
 before_install:
 - docker run -d -p 1883:1883  eclipse-mosquitto
+- docker run -d -p 27017-27019:27017-27019 --name mongodb mongo:4.0.4
 install:
 - npm install
 - npm install --only=dev
