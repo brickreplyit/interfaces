@@ -6,6 +6,7 @@ const common = require('../../server/core/common/common');
 const MQTT = require('../../server/core/infrastructure/mqtt/mqtt');
 const config = global.gConfig;
 const conn_string = config.test.integration.MQTT_ENDPOINT;
+const conn_storage = config.test.integration.STORAGE_ENDPOINT;
 
 class ExecutionWorkProxy extends abstraction.IExecutionWork{
     /**
@@ -86,7 +87,7 @@ class ExecutionWorkProxy extends abstraction.IExecutionWork{
     }
 
     WorkManual(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items){
-        const connector = new ExecutionWorkManualConnector(new MQTT(common.MQTT_LOGGER, conn_string), this.whoIam, 'mongodb://0.0.0.0:27017/');
+        const connector = new ExecutionWorkManualConnector(new MQTT(common.MQTT_LOGGER, conn_string), this.whoIam, conn_storage);
 
         connector.Start(new entities.Pieces(real_production_capacity, piece_type), operations.works);
 
