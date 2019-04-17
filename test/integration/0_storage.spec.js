@@ -20,18 +20,18 @@ describe('STORAGE', () => {
             }
         });
 
-        it('Should Get Data', async () => {
-            const DB = new Storage(Url);
-
-            const result = await DB.Get({ workId: 'AVV' }, 'TEST_COLLECTION', 'TEST_DB');
-
-            expect(result.length).to.be.greaterThan(0);
-        });
-
         it('Should Insert an Element', async () => {
             const DB = new Storage(Url);
 
             await DB.Insert([{ workId: 'TEST', toWorks: [{'length':200,'type':'outAvv'}]}], 'TEST_COLLECTION', 'TEST_DB');
+        });
+
+        it('Should Get Data', async () => {
+            const DB = new Storage(Url);
+
+            const result = await DB.Get({ workId: 'TEST' }, 'TEST_COLLECTION', 'TEST_DB');
+
+            expect(result.length).to.be.greaterThan(0);
         });
 
         it('Should Delete an Element', async () => {
