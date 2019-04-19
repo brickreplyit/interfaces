@@ -20,6 +20,6 @@ install:
 - npm install --only=dev
 - npm install coveralls codecov
 script:
-- npm run cov-test
+- npm run start
 - "./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov && codecov"
 - ./node_modules/.bin/nyc report --reporter=text-lcov | coveralls

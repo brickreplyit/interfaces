@@ -4,7 +4,7 @@
   "description": "",
   "main": "./client/src/Main.js",
   "scripts": {
-    "start": "concurrently \"npm run serve\" \"cd ./client && npm run serve \"",
+    "start": "concurrently \"npm run serve\" \" cd ./test/moq && node manualOPSimulator.js\" \"npm run cov-test\"",
     "start-client": "cd ./client && npm run serve",
     "serve": "nodemon ./server/Server.js",
     "test": "mocha ./test//**/*.spec.js",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/piexmuss/platform#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "chai": "^4.2.0",
     "codecov": "^3.2.0",
     "concurrently": "^4.1.0",

@@ -79,8 +79,8 @@ class ExecutionWorkProxy extends abstraction.IExecutionWork{
         switch(work_mode){
         case 'DEVICE' :
             return this.WorkDevice(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
-        // case 'MANUAL' :
-        //     return this.WorkManual(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
+        case 'MANUAL' :
+            return this.WorkManual(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
         default : 
             return this.WorkStandard(ICompletion, real_production_capacity, piece_type, operations, workID, consumed_items);
         }

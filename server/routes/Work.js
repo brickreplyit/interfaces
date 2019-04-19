@@ -22,6 +22,15 @@ router.get('/:workId', async (ctx, next) => {
     next();
 });
 
+router.get('/', async (ctx, next) => {
+
+    const res = await GetAll();
+
+    ctx.body = res;
+
+    next();
+});
+
 router.post('/', async (ctx, next) => {
     try{
         const MQTT_BROKER = new MQTT(common.MQTT_LOGGER,conn_string);
@@ -43,6 +52,10 @@ router.post('/', async (ctx, next) => {
     }
     next();
 });
+
+function GetAll(){
+    return Storage.Get({ }, 'ProductionDocument', 'EW');
+}
 
 function GetData(workId){
     return Storage.Get({ workId : workId }, 'ProductionDocument', 'EW');

@@ -8,7 +8,6 @@ describe('INTEGRATION TESTS', () => {
 
         it('Should work with sequential children MQTT', async function() {
             this.timeout(120000);
-            
             const test_tables =  await utilities_execution_work.TestFactoryMQTT(1440 * 60 * 1000, implementations.SequentialExecutionWork);
          
             const start_unit = 1;
@@ -24,8 +23,7 @@ describe('INTEGRATION TESTS', () => {
         });
 
         it('Should Work with parallel children MQTT', async function() {
-            this.timeout(60000);
-
+            this.timeout(120000);
             const test_tables =  await utilities_execution_work.TestFactoryMQTT(0, implementations.ParallelExecutionWork);
          
             const start_unit = 1;

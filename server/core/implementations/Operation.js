@@ -99,7 +99,7 @@ class Operation extends abstraction.IOperation {
                             , capacity : 200
                         }
                     ]
-                    , mode : 'DEVICE'
+                    , mode : 'MANUAL'
                        
                 }
             ]
