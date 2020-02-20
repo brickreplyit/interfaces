@@ -1,9 +1,11 @@
 const expect = require('chai').expect;
+const assert = require('assert');
 const utilities_execution_work = require('./utility.executionwork');
-const implementations = require('../../src/Core/Index');
+const implementations = require('../../server/core//Index');
 const dbg = require('debug')('platform:abstraction:test');
 
 describe('Plant', () => {
+
     it('Should return BOM', async () => {
         const bom = new implementations.BOM();
 

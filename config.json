@@ -1,0 +1,23 @@
+{
+    "global": {
+        "Version" : "0.1" 
+    }
+    ,"development": {
+        "test" : {
+            "unit" : {}
+            , "integration" : {
+                "MQTT_ENDPOINT" : "mqtt://0.0.0.0:1883"
+                , "STORAGE_ENDPOINT" : "mongodb://0.0.0.0:27017/"
+            }
+        }
+    }
+    ,"production": {
+        "test" : {
+            "unit" : {}
+            , "integration" : {
+                "MQTT_ENDPOINT" : "mqtt://0.0.0.0:1883"
+                , "STORAGE_ENDPOINT" : "mongodb://0.0.0.0:27017/"
+            }
+        }
+    }
+}

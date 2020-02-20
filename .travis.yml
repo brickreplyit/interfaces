@@ -14,11 +14,12 @@ services:
 - docker
 before_install:
 - docker run -d -p 1883:1883  eclipse-mosquitto
+- docker run -d -p 27017-27019:27017-27019 --name mongodb mongo:4.0.4
 install:
 - npm install
 - npm install --only=dev
 - npm install coveralls codecov
 script:
-- npm run cov-test
+- npm run start
 - "./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov && codecov"
 - ./node_modules/.bin/nyc report --reporter=text-lcov | coveralls
